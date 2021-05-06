@@ -10,17 +10,16 @@ const verify = require("../verifyToken");
 
 const router = express.Router();
 
-router.get("/dashboard", verify, async (req, res) => {
-  // try {
-  //   res.send(req.user);
-  //   const usdtBuyOrders = await BuyTrxn.find({
-  //     trxnCoin: "USDT",
-  //     userEmail: req.user.email,
-  //   });
-  //   res.json(usdtBuyOrders);
-  // } catch (err) {
-  //   res.json({ message: "failed to find user related buy orders" });
-  // }
+router.get("/dashboard", async (req, res) => {
+  res.send("Hello Bro, this is a demo dashboard");
+});
+
+router.get("/", async (req, res) => {
+  res.send("Hello Bro, Welcome home");
+});
+
+router.get("/api", async (req, res) => {
+  res.send("Hello Bro, Welcome to our Api Home");
 });
 
 //LOGOUT A USER
