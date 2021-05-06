@@ -1,4 +1,5 @@
 const express = require("express");
+require("dotenv").config();
 const actions = require("../methods/actions");
 const planactions = require("../methods/planActions");
 const notificationactions = require("../methods/notificationActions");
@@ -10,15 +11,15 @@ const verify = require("../verifyToken");
 
 const router = express.Router();
 
-router.get("/dashboard", async (req, res) => {
+router.get("/dashboard", function (req, res) {
   res.send("Hello Bro, this is a demo dashboard");
 });
 
-router.get("/", async (req, res) => {
+router.get("/", function (req, res) {
   res.send("Hello Bro, Welcome home");
 });
 
-router.get("/api", async (req, res) => {
+router.get("/api", function (req, res) {
   res.send("Hello Bro, Welcome to our Api Home");
 });
 
