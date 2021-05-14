@@ -42,13 +42,13 @@ var functions = {
         value,
       });
       //create trxn data
-      var newTransaction = Transaction({
-        userEmail: req.user.email,
-        userFullname: req.user.username,
-        transactionAmount: value,
-        transactionType: "Withdrawal",
-      });
-      newTransaction.save(function () {});
+      // var newTransaction = Transaction({
+      //   userEmail: req.user.email,
+      //   userFullname: req.user.username,
+      //   transactionAmount: value,
+      //   transactionType: "Withdrawal",
+      // });
+      // newTransaction.save(function () {});
     } catch (err) {
       res.json({ message: err });
     }

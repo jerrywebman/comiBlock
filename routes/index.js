@@ -2,6 +2,7 @@ const express = require("express");
 require("dotenv").config();
 const actions = require("../methods/actions");
 const planactions = require("../methods/planActions");
+const userplanactions = require("../methods/userPlanActions");
 const notificationactions = require("../methods/notificationActions");
 const sponsorshipactions = require("../methods/sponsorshipActions");
 const schoolactions = require("../methods/schoolActions");
@@ -37,6 +38,25 @@ router.post("/api/login", actions.authenticate);
 
 //@desc Get info of a user
 router.get("/api/getinfo", actions.getinfo);
+
+// ------------------------
+//CREATE A USER PLAN
+// -------------------------
+//@desc POST a Plan
+router.post("/api/create/userplan", verify, userplanactions.createUserPlan);
+//@desc DELETE a Plan
+router.delete("/api/userplan/:id", verify, userplanactions.deleteUserPlan);
+//@desc PATCH
+//edit a plan
+router.patch("/api/userplan/:id", verify, userplanactions.updateUserPlan);
+
+//@desc PATCH
+//get a plan
+router.get("/api/userplan/:id", verify, userplanactions.getSingleUserPlan);
+
+//@desc GET
+//get all  plan
+router.get("/api/userplan/", verify, userplanactions.getAllUserPlan);
 
 //CREATE A PLAN
 //@desc POST a Plan

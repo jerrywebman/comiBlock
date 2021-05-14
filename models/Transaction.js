@@ -13,12 +13,25 @@ var transactionSchema = new mongoose.Schema({
   transactionAmount: {
     type: Number,
   },
-  transactionType: {
+  dateRequested: {
     type: String,
+    require: true,
   },
-  dateJoined: {
+  dateProcessed: {
     type: Date,
     default: Date.now,
+  },
+  accountName: {
+    type: String,
+    require: true,
+  },
+  accountNumber: {
+    type: String,
+    require: true,
+  },
+
+  transactionType: {
+    type: String,
   },
 });
 

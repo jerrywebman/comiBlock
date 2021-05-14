@@ -35,6 +35,7 @@ var functions = {
           userEmail: req.body.email,
           userUsername: req.body.username,
           userFullname: req.body.fullname,
+          accountType: req.body.accountType,
           nairaBalance: 0,
           referralBonusBalance: 0,
         };
