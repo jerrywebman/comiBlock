@@ -50,7 +50,6 @@ router.delete("/api/userplan/:id", verify, userplanactions.deleteUserPlan);
 //edit a plan
 router.patch("/api/userplan/:id", verify, userplanactions.updateUserPlan);
 
-//@desc PATCH
 //get a plan
 router.get("/api/userplan/:id", verify, userplanactions.getSingleUserPlan);
 
