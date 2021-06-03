@@ -7,6 +7,7 @@ const notificationactions = require("../methods/notificationActions");
 const sponsorshipactions = require("../methods/sponsorshipActions");
 const schoolactions = require("../methods/schoolActions");
 const moneyactions = require("../methods/userMoneyActions");
+const withdrawalactions = require("../methods/withdrawalActions");
 
 const verify = require("../verifyToken");
 
@@ -17,7 +18,7 @@ router.get("/dashboard", function (req, res) {
 });
 
 router.get("/", function (req, res) {
-  res.send("Hello Bro, Welcome home");
+  res.sendFile("views/test.html", { root: __dirname });
 });
 
 router.get("/api", function (req, res) {
@@ -150,6 +151,20 @@ router.patch(
 
 // get a User Balance
 router.get("/api/user/account/balance", verify, moneyactions.getUserBalance);
+
+// create a withdrawal order
+router.post(
+  "/api/user/pending/withdrawal",
+  verify,
+  withdrawalactions.createWithdrawal
+);
+
+// get a user withdrawal order
+router.get(
+  "/api/user/pending/withdrawal",
+  verify,
+  withdrawalactions.getWithdrawal
+);
 
 //CREATE SPONSORSHIP/ORGANOGRAM
 //@desc POST

@@ -1,0 +1,192 @@
+<html>
+  <head>
+    <style>
+      table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      td,
+      th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+      }
+
+      tr:nth-child(even) {
+        background-color: #dddddd;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Welcome Bro, These are the existing API Endpoints</h1>
+    <table>
+      <tr>
+        <th>Route</th>
+        <th>Action</th>
+        <th>Request.body</th>
+      </tr>
+      <tr>
+        <td>GET-/logout</td>
+        <td>Logout</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>POST-/api/signup</td>
+        <td>Signup</td>
+        <td>
+          accountType: { type: String, require: true, }, fullname: { type:
+          String, require: true, }, email: { type: String, require: true, match:
+          /.+\@.+\..+/, unique: true, }, username: { type: String, require:
+          true, unique: true, }, password: { type: String, require: true, },
+          dateJoined: { type: Date, default: Date.now, },
+        </td>
+      </tr>
+      <tr>
+        <td>POST-/api/login</td>
+        <td>Authentication/login</td>
+        <td>Email and Password</td>
+      </tr>
+      <tr>
+        <td>GET-/api/getinfo</td>
+        <td>Response with auth user details</td>
+        <td>res.json({ id, fullname, username, email, dateJoined, });</td>
+      </tr>
+      <tr>
+        <td>POST - /api/create/userplan</td>
+        <td>Create a User Plan</td>
+        <td>
+          userPlanAmount: { type: Number, require: true, }, userPlanName: {
+          type: String, require: true, }, userEmail: { type: String, require:
+          true, }, userUsername: { type: String, require: true, },
+          userAccountType: { type: String, require: true, }, childName: { type:
+          String, require: true, }, childPhoto: { type: String, require: true,
+          }, childDOB: { type: String, require: true, }, childClass: { type:
+          String, require: true, }, schoolName: { type: String, require: true,
+          }, schoolAddress: { type: String, require: true, }, schoolState: {
+          type: String, require: true, }, schoolEmail: { type: String, require:
+          true, }, schoolPhoneNumber: { type: String, require: true, },
+          schoolAccountName: { type: String, require: true, },
+          schoolAccountNumber: { type: String, require: true, }, schoolBankName:
+          { type: String, require: true, }, createdAt: { type: Date, require:
+          true, default: Date.now, },
+        </td>
+      </tr>
+      <tr>
+        <td>DELETE - /api/userplan/:id</td>
+        <td>Delete a Plan</td>
+        <td>_id: req.params.id</td>
+      </tr>
+      <tr>
+        <td>PATCH - /api/userplan/:id</td>
+        <td>Edit/update a Plan</td>
+        <td>
+          _id: req.params.id - Body - userPlanAmount: req.body.userPlanAmount,
+          userPlanName: req.body.userPlanName, userEmail: req.user.email,
+          userUsername: req.user.username, userAccountType:
+          req.user.accountType, childName: req.body.childName, childPhoto:
+          req.body.childPhoto, childDOB: req.body.childDOB, childClass:
+          req.body.childClass, schoolName: req.body.schoolName, schoolState:
+          req.body.schoolState, schoolEmail: req.body.schoolEmail,
+          schoolPhoneNumber: req.body.schoolPhoneNumber, schoolAccountName:
+          req.body.schoolAccountName, schoolAccountNumber:
+          req.body.schoolAccountNumber, schoolBankName: req.body.schoolBankName,
+        </td>
+      </tr>
+      <tr>
+        <td>GET - /api/userplan/:id</td>
+        <td>Get a plan</td>
+        <td>_id: req.params.id</td>
+      </tr>
+      <tr>
+        <td>POST - /api/create/notification</td>
+        <td>Post a notification</td>
+        <td>message: { type: String, require: true, },</td>
+      </tr>
+      <tr>
+        <td>Delete - /api/notification/:id</td>
+        <td>Delete a notification</td>
+        <td>_id: req.params.id,</td>
+      </tr>
+      <tr>
+        <td>Update - /api/notification/:id</td>
+        <td>Update a notification</td>
+        <td>
+          _id: req.params.id, -Body - message: req.body.message, status:
+          req.body.status,
+        </td>
+      </tr>
+      <tr>
+        <td>Get - /api/notification/:id</td>
+        <td>Get a notification</td>
+        <td>_id: req.params.id</td>
+      </tr>
+      <!-- Money -->
+      <tr>
+        <td>Post - /api/create/school</td>
+        <td>Post a school</td>
+        <td>
+          schoolName: req.body.schoolName, schoolAddress:
+          req.body.schoolAddress, schoolPhone: req.body.schoolPhone,
+          schoolEmail: req.body.schoolEmail, schoolBankName:
+          req.body.schoolBankName, schoolAccountName:
+          req.body.schoolAccountName, schoolAccountNumber:
+          req.body.schoolAccountNumber,
+        </td>
+      </tr>
+      <tr>
+        <td>Get - /api/school"</td>
+        <td>Get all users school</td>
+        <td>res.json()</td>
+      </tr>
+      <tr>
+        <td>Patch - /api/school/:id</td>
+        <td>Update a school</td>
+        <td>
+          _id: req.params.id, Body--schoolName: req.body.schoolName,
+          schoolAddress: req.body.schoolAddress, schoolPhone:
+          req.body.schoolPhone, schoolEmail: req.body.schoolEmail,
+          schoolBankName: req.body.schoolBankName, schoolAccountName:
+          req.body.schoolAccountName, schoolAccountNumber:
+          req.body.schoolAccountNumber,
+        </td>
+      </tr>
+      <tr>
+        <td>Get - /api/school/user</td>
+        <td>Get a user school</td>
+        <td>res.json()</td>
+      </tr>
+      <tr>
+        <td>Patch - /api/user/account/addnaira</td>
+        <td>credit a User Naira Balance</td>
+        <td>req.body.amount</td>
+      </tr>
+      <tr>
+        <td>Patch - /api/user/account/minusnaira</td>
+        <td>debit a User Naira Balance</td>
+        <td>req.body.amount</td>
+      </tr>
+      <tr>
+        <td>Get - /api/user/account/balance</td>
+        <td>Get a User Naira Balance</td>
+        <td>res.json({})</td>
+      </tr>
+      <tr>
+        <td>POST - /api/user/pending/withdrawal</td>
+        <td>POST a User Pending Withdrawal</td>
+        <td>req.body.amount</td>
+      </tr>
+      <tr>
+        <td>Get - /api/user/pending/withdrawal</td>
+        <td>Get a User Pending Withdrawal(s)</td>
+        <td>res.json([])</td>
+      </tr>
+      <!-- <tr>
+        <td>Patch - /api/user/account/referral</td>
+        <td>debit a User Referral Balance</td>
+        <td>req.body.amount</td>
+      </tr> -->
+    </table>
+  </body>
+</html>
