@@ -17,7 +17,7 @@ if (process.env.NODE_ENV === "development") {
 
 ///routes
 //cors allows us to call data/api from cross domains
-app.use(cors());
+app.use(cors({ origin: "https://localhost:3000", credentials: true }));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(routes);
