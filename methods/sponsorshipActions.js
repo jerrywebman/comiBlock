@@ -8,7 +8,7 @@ var functions = {
     } else {
       var newSponsorship = Sponsorship({
         parent: req.body.parent, //user sponsor
-        _id: req.user.username, //user username
+        _id: req.user.username, //user fullname
       });
       newSponsorship.save(function (err, newSponsorship) {
         if (err) {

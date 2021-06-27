@@ -4,6 +4,7 @@ var Money = require("../models/money");
 var jwt = require("jwt-simple");
 var config = require("../config/dbconfig");
 const { token } = require("morgan");
+var bcrypt = require("bcrypt");
 
 var functions = {
   addNew: async function (req, res) {
@@ -63,6 +64,111 @@ var functions = {
         }
       });
     }
+  },
+
+  updateProfile: async function (req, res) {
+    if (
+      !req.body.stateOfOrigin ||
+      !req.body.address ||
+      !req.body.lgaArea ||
+      !req.body.phone ||
+      !req.body.town
+    ) {
+      res.json({ success: false, msg: "Enter all fields" });
+    } else if (!req.user.email) {
+      return res.status(400).send({
+        success: false,
+        msg: "There is no user with this email address!",
+      });
+    } else {
+      //Updating the user Profile
+      try {
+        const updatedProfile = await User.updateOne(
+          { email: req.user.email },
+          {
+            $set: {
+              stateOfOrigin: req.body.stateOfOrigin,
+              address: req.body.address,
+              phone: req.body.phone,
+              town: req.body.town,
+              lgaArea: req.body.lgaArea,
+            },
+          }
+        );
+        res.json({
+          success: true,
+          Message: "Profile Successfully updated",
+        });
+      } catch (err) {
+        res.json({ message: err });
+      }
+    }
+  },
+
+  //update the user password
+  updatePassword: async function (req, res) {
+    User.findOne(
+      {
+        email: req.user.email,
+      },
+      function (err, user) {
+        if (err) throw err;
+        if (!user) {
+          res.status(403).send({
+            success: false,
+            msg: "Authentication Failed, user email or password does not exist",
+          });
+        } else {
+          user.comparePassword(
+            req.body.oldPassword,
+            async function (err, isMatch) {
+              if (
+                isMatch &&
+                !err &&
+                req.body.confirmPassword === req.body.newPassword
+              ) {
+                //UPDATE THE PASSWORD
+                try {
+                  bcrypt.genSalt(10, function (err, salt) {
+                    if (err) {
+                      return next(err);
+                    }
+                    bcrypt.hash(
+                      req.body.newPassword,
+                      salt,
+                      async function (err, hash) {
+                        if (err) {
+                          return next(err);
+                        }
+                        const updatedPassword = await User.updateOne(
+                          { email: req.user.email },
+                          {
+                            $set: {
+                              password: hash,
+                            },
+                          }
+                        );
+                      }
+                    );
+                  });
+                  res.json({
+                    success: true,
+                    Message: "Password Successfully updated",
+                  });
+                } catch (err) {
+                  res.json({ message: err });
+                }
+              } else {
+                return res.status(403).send({
+                  success: false,
+                  msg: "Password Reset Failed, Password Does not match",
+                });
+              }
+            }
+          );
+        }
+      }
+    );
   },
 
   //authenticate the user

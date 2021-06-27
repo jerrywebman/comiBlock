@@ -5,9 +5,10 @@ const planactions = require("../methods/planActions");
 const userplanactions = require("../methods/userPlanActions");
 const notificationactions = require("../methods/notificationActions");
 const sponsorshipactions = require("../methods/sponsorshipActions");
-const schoolactions = require("../methods/schoolActions");
+const childactions = require("../methods/childActions");
 const moneyactions = require("../methods/userMoneyActions");
 const withdrawalactions = require("../methods/withdrawalActions");
+const adminactions = require("../methods/adminActions");
 
 const verify = require("../verifyToken");
 
@@ -39,6 +40,13 @@ router.post("/api/login", actions.authenticate);
 
 //@desc Get info of a user
 router.get("/api/getinfo", actions.getinfo);
+
+//UPDATE USER PROFILE
+//edit profile
+router.patch("/api/update/profile", verify, actions.updateProfile);
+
+//edit profile
+router.patch("/api/update/password", verify, actions.updatePassword);
 
 // ------------------------
 //CREATE A USER PLAN
@@ -114,18 +122,18 @@ router.get(
   notificationactions.getAllNotification
 );
 
-//SCHOOL
-//@desc POST a School
-router.post("/api/create/school", verify, schoolactions.createSchool);
+//CHILD
+//@desc POST a Child
+router.post("/api/create/child", verify, childactions.createChild);
 
-//@desc GET all School
-router.get("/api/school", verify, schoolactions.getAllSchool);
+//@desc GET all Child
+router.get("/api/child", verify, childactions.getAllChild);
 
-// update a School
-router.patch("/api/school/:id", verify, schoolactions.updateSchool);
+// get a Child
+router.get("/api/child/:id", verify, childactions.getSingleChild);
 
-//get a user Schools
-router.get("/api/school/user", verify, schoolactions.getSingleSchool);
+// update a Child
+router.patch("/api/child/:id", verify, childactions.updateChild);
 
 //USER MONEY
 // credit a User Naira Balance
@@ -173,5 +181,18 @@ router.post("/api/create/sponsorship", sponsorshipactions.createSponsorship);
 //@desc GET
 //fix. add user
 router.get("/api/sponsorship/:id", sponsorshipactions.getSpecificSponsorship);
+
+//ADMIN FUNCTIONS
+//get all user
+router.get("/api/get/alluser", adminactions.getAllUser);
+
+//get a single user
+router.get("/api/get/user", adminactions.getAUser);
+
+//get all withdrawal
+router.get("/api/get/allwithdrawal", adminactions.getAllWithdrawal);
+
+//accept a withdrawal
+router.get("/api/approve/withdrawal/:id", adminactions.approveWithdrawal);
 
 module.exports = router;

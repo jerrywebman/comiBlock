@@ -50,28 +50,26 @@ var userSchema = new mongoose.Schema({
     min: 6,
     max: 255,
   },
-  // stateOfOrigin: {
-  //   type: String,
-  //   require: true,
-  //   min: 6,
-  //   max: 255,
-  // },
-  // address: {
-  //   type: String,
-  //   require: true,
-  //   min: 6,
-  //   max: 255,
-  // },
-  // nokName: {
-  //   type: String,
-  //   require: true,
-  //   min: 6,
-  //   max: 255,
-  // },
-  // nokPhone: {
-  //   type: Number,
-  //   require: true,
-  // },
+  stateOfOrigin: {
+    type: String,
+    require: true,
+  },
+  address: {
+    type: String,
+    require: true,
+  },
+  town: {
+    type: String,
+    require: true,
+  },
+  lgaArea: {
+    type: String,
+    require: true,
+  },
+  phone: {
+    type: Number,
+    require: true,
+  },
   // nokAddress: {
   //   type: String,
   //   require: true,

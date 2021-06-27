@@ -1,28 +1,61 @@
 var Withdrawal = require("../models/Withdrawal");
+var Money = require("../models/money");
 
 var functions = {
   //CREATE Withdrawal
-  createWithdrawal: function (req, res) {
+  createWithdrawal: async function (req, res) {
+    //make sure all feilds are not empty
+    //check the balance of the user
+    //store the balance
+
+    let balance = await Money.findOne({ userEmail: req.user.email });
+
+    const minus = Number(req.body.amount);
+    const moneyBalance = Number(balance.nairaBalance);
     if (
-      !req.user.userFullName ||
-      !req.user.userEmail ||
+      !req.user.fullname ||
+      !req.user.email ||
       !req.body.amount ||
-      !req.user.userUsername
+      !req.user.username
     ) {
       res.json({ success: false, msg: "Enter all fields" });
+    } else if (minus > moneyBalance) {
+      //if balance is greater than the withdrawal request approve
+      res.json({ success: false, msg: "Insufficient Balance" });
     } else {
       var newWithdrawal = Withdrawal({
-        userFullName: req.user.userFullName,
-        userEmail: req.user.userEmail,
-        amount: req.body.amount,
-        userUsername: req.user.userUsername,
+        userFullName: req.user.fullname,
+        userEmail: req.user.email,
+        amount: minus,
+        userUsername: req.user.username,
         status: "Pending",
       });
       newWithdrawal.save(function (err, newWithdrawal) {
         if (err) {
-          res.json({ success: false, msg: "Failed to save" });
+          res.json({
+            success: false,
+            msg: "Failed to create withdrawal request",
+          });
         } else {
-          res.json({ success: true, msg: "successfully saved" });
+          const withdrawalCall = async () => {
+            try {
+              const withdrawalRequest = await Money.updateOne(
+                { _id: req.user.email },
+                {
+                  $inc: {
+                    nairaBalance: -minus,
+                  },
+                }
+              );
+              res.json({
+                success: true,
+                Message: "Withdrawal Successfully created",
+              });
+            } catch (err) {
+              res.json({ message: err });
+            }
+          };
+          withdrawalCall();
         }
       });
     }
