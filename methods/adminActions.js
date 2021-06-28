@@ -17,7 +17,7 @@ var functions = {
   //GET A SINGLE USER
   getAUser: async function (req, res) {
     try {
-      const user = await User.find({ userEmail: req.body.email });
+      const user = await User.find({ email: req.body.email });
       res.json(user);
     } catch (err) {
       res.json({ message: err });
