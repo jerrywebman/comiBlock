@@ -262,7 +262,7 @@ router.get(
 router.get("/api/get/alluser", adminactions.getAllUser);
 
 //get a single user
-router.get("/api/get/user", adminactions.getAUser);
+router.get("/api/get/user/:email", adminactions.getAUser);
 
 //get all withdrawal
 router.get("/api/get/allwithdrawal", adminactions.getAllWithdrawal);
