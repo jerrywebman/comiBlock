@@ -4,10 +4,12 @@ const actions = require("../methods/actions");
 const planactions = require("../methods/planActions");
 const userplanactions = require("../methods/userPlanActions");
 const notificationactions = require("../methods/notificationActions");
-const sponsorshipactions = require("../methods/sponsorshipActions");
+const networkactions = require("../methods/networkActions");
 const childactions = require("../methods/childActions");
 const moneyactions = require("../methods/userMoneyActions");
 const withdrawalactions = require("../methods/withdrawalActions");
+const sponsorshiprequestactions = require("../methods/sponsorshipRequestAction");
+const donationrequestactions = require("../methods/donationRequestAction");
 const adminactions = require("../methods/adminActions");
 
 const verify = require("../verifyToken");
@@ -174,13 +176,86 @@ router.get(
   withdrawalactions.getWithdrawal
 );
 
-//CREATE SPONSORSHIP/ORGANOGRAM
-//@desc POST
-router.post("/api/create/sponsorship", sponsorshipactions.createSponsorship);
+// CREATE Network/ORGANOGRAM
+// @desc POST
+router.post("/api/create/network", networkactions.createNetwork);
 
 //@desc GET
 //fix. add user
-router.get("/api/sponsorship/:id", sponsorshipactions.getSpecificSponsorship);
+router.get("/api/network/:fullname", networkactions.getSpecificNetwork);
+router.get("/api/networktwo/:fullname", networkactions.getSpecificNetworkTwo);
+
+//CREATE SPONSORSHIP REQUEST
+//@desc POst a sponsorship request
+router.post(
+  "/api/create/sponsorship",
+  verify,
+  sponsorshiprequestactions.createSponsorshipRequest
+);
+//delete a sponsorship request
+router.delete(
+  "/api/sponsorship/:id",
+  verify,
+  sponsorshiprequestactions.deleteSponsorshipRequest
+);
+//update a sponsorship request
+router.patch(
+  "/api/sponsorship/:id",
+  verify,
+  sponsorshiprequestactions.updateSponsorshipRequest
+);
+
+//get a sponsorship request
+router.get(
+  "/api/sponsorship/:id",
+  verify,
+  sponsorshiprequestactions.getSingleSponsorshipRequest
+);
+
+//get all  sponsorship request
+router.get(
+  "/api/sponsorship",
+  verify,
+  sponsorshiprequestactions.getAllSponsorshipRequest
+);
+
+//CREATE DONATION REQUEST
+//@desc POst a donation request
+router.post(
+  "/api/create/donation",
+  verify,
+  donationrequestactions.createDonationRequest
+);
+//delete a donation request
+router.delete(
+  "/api/donation/:id",
+  verify,
+  donationrequestactions.deleteDonationRequest
+);
+//update a donation request
+router.patch(
+  "/api/donation/:id",
+  verify,
+  donationrequestactions.updateDonationRequest
+);
+
+//get a donation request
+router.get(
+  "/api/donation/:id",
+  verify,
+  donationrequestactions.getSingleDonationRequest
+);
+
+//get all  donation request
+router.get(
+  "/api/donation",
+  verify,
+  donationrequestactions.getAllDonationRequest
+);
+
+// //@desc GET
+// //fix. add user
+// router.get("/api/sponsorship/:id", sponsorshipactions.getSpecificSponsorship);
 
 //ADMIN FUNCTIONS
 //get all user

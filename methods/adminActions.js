@@ -48,7 +48,7 @@ var functions = {
       accountNumber: req.body.schoolAccountNumber,
       transactionType: "Withdrawal",
     });
-    newTransaction.save(function (err, newSchool) {
+    newTransaction.save(function (err, newTransaction) {
       if (err) {
         res.json({ success: false, msg: "Failed to save" });
       } else {

@@ -1,15 +1,15 @@
 var mongoose = require("mongoose");
 var schema = mongoose.Schema;
 
-var sponsorshipSchema = new mongoose.Schema({
+var networkSchema = new mongoose.Schema({
   _id: {
     type: String,
     require: true,
   },
   parent: {
-    type: String,
+    type: Array,
     require: true,
   },
 });
 
-module.exports = mongoose.model("Sponsorship", sponsorshipSchema);
+module.exports = mongoose.model("Network", networkSchema);

@@ -22,25 +22,44 @@
   <body>
     <h1>Welcome Bro, These are the existing API Endpoints</h1>
     <table>
+      
       <tr>
         <th>Route</th>
         <th>Action</th>
-        <th>Request.body</th>
+        <th>Request.body/params</th>
+      </tr>
+      <tr>
+        <td style="font-weight: bolder; color: green; text-align: center">
+          SIGNUP, LOGIN, LOGOUT, CHANGE PASSWORD & UPDATE PROFILE
+        </td>
       </tr>
       <tr>
         <td>GET-/logout</td>
         <td>Logout</td>
         <td>-</td>
       </tr>
+      
       <tr>
         <td>POST-/api/signup</td>
         <td>Signup</td>
         <td>
-          accountType: { type: String, require: true, }, fullname: { type:
-          String, require: true, }, email: { type: String, require: true, match:
-          /.+\@.+\..+/, unique: true, }, username: { type: String, require:
-          true, unique: true, }, password: { type: String, require: true, },
-          dateJoined: { type: Date, default: Date.now, },
+          req.body.accountType req.body.fullname req.body.email
+          req.body.username req.body.password
+        </td>
+      </tr>
+      <tr>
+        <td>PATCH-/api/update/profile</td>
+        <td>Update Profile</td>
+        <td>
+          req.body.stateOfOrigin, req.body.address, req.body.lgaArea,
+          req.body.phone, req.body.town,
+        </td>
+      </tr>
+      <tr>
+        <td>PATCH-/api/update/password</td>
+        <td>Update Password</td>
+        <td>
+          req.body.oldPassword,req.body.confirmPassword,req.body.newPassword
         </td>
       </tr>
       <tr>
@@ -53,86 +72,83 @@
         <td>Response with auth user details</td>
         <td>res.json({ id, fullname, username, email, dateJoined, });</td>
       </tr>
+       <tr>
+        <td style="font-weight: bolder; color: green; text-align: center">
+          USER PLAN
+        </td>
+      </tr>
       <tr>
         <td>POST - /api/create/userplan</td>
         <td>Create a User Plan</td>
         <td>
-          userPlanAmount: { type: Number, require: true, }, userPlanName: {
-          type: String, require: true, }, userEmail: { type: String, require:
-          true, }, userUsername: { type: String, require: true, },
-          userAccountType: { type: String, require: true, }, childName: { type:
-          String, require: true, }, childPhoto: { type: String, require: true,
-          }, childDOB: { type: String, require: true, }, childClass: { type:
-          String, require: true, }, schoolName: { type: String, require: true,
-          }, schoolAddress: { type: String, require: true, }, schoolState: {
-          type: String, require: true, }, schoolEmail: { type: String, require:
-          true, }, schoolPhoneNumber: { type: String, require: true, },
-          schoolAccountName: { type: String, require: true, },
-          schoolAccountNumber: { type: String, require: true, }, schoolBankName:
-          { type: String, require: true, }, createdAt: { type: Date, require:
-          true, default: Date.now, },
+          req.body.userPlanAmount, req.body.userPlanName, req.user.email,
+          req.user.username, req.user.accountType, req.body.childName,
+          req.body.childPhoto, req.body.childDOB, req.body.childClass,
+          req.body.schoolName, req.body.schoolState, req.body.schoolEmail,
+          req.body.schoolPhoneNumber, req.body.schoolAccountName,
+          req.body.schoolAccountNumber, req.body.schoolBankName,
         </td>
       </tr>
       <tr>
         <td>DELETE - /api/userplan/:id</td>
         <td>Delete a Plan</td>
-        <td>_id: req.params.id</td>
+        <td>req.params.id</td>
       </tr>
       <tr>
         <td>PATCH - /api/userplan/:id</td>
         <td>Edit/update a Plan</td>
         <td>
-          _id: req.params.id - Body - userPlanAmount: req.body.userPlanAmount,
-          userPlanName: req.body.userPlanName, userEmail: req.user.email,
-          userUsername: req.user.username, userAccountType:
-          req.user.accountType, childName: req.body.childName, childPhoto:
-          req.body.childPhoto, childDOB: req.body.childDOB, childClass:
-          req.body.childClass, schoolName: req.body.schoolName, schoolState:
-          req.body.schoolState, schoolEmail: req.body.schoolEmail,
-          schoolPhoneNumber: req.body.schoolPhoneNumber, schoolAccountName:
-          req.body.schoolAccountName, schoolAccountNumber:
-          req.body.schoolAccountNumber, schoolBankName: req.body.schoolBankName,
+          req.params.id - req.body.userPlanAmount, req.body.userPlanName,
+          req.user.email, req.user.username, userAccountType:
+          req.user.accountType, req.body.childName, req.body.childPhoto,
+          req.body.childDOB, req.body.childClass, req.body.schoolName,
+          req.body.schoolState, req.body.schoolEmail,
+          req.body.schoolPhoneNumber, req.body.schoolAccountName,
+          req.body.schoolAccountNumber, req.body.schoolBankName,
         </td>
       </tr>
       <tr>
         <td>GET - /api/userplan/:id</td>
         <td>Get a plan</td>
-        <td>_id: req.params.id</td>
+        <td>req.params.id</td>
+      </tr>
+       <tr>
+        <td style="font-weight: bolder; color: green; text-align: center">
+          NOTIFICATION
+        </td>
       </tr>
       <tr>
         <td>POST - /api/create/notification</td>
         <td>Post a notification</td>
-        <td>message: { type: String, require: true, },</td>
+        <td>req.body.message</td>
       </tr>
       <tr>
         <td>Delete - /api/notification/:id</td>
         <td>Delete a notification</td>
-        <td>_id: req.params.id,</td>
+        <td>req.params.id</td>
       </tr>
       <tr>
         <td>Update - /api/notification/:id</td>
         <td>Update a notification</td>
-        <td>
-          _id: req.params.id, -Body - message: req.body.message, status:
-          req.body.status,
-        </td>
+        <td>req.params.id, req.body.message, req.body.status,</td>
       </tr>
       <tr>
         <td>Get - /api/notification/:id</td>
         <td>Get a notification</td>
         <td>_id: req.params.id</td>
       </tr>
-      <!-- Money -->
+       <!-- <tr>
+        <td style="font-weight: bolder; color: green; text-align: center">
+          CHILD
+        </td>
+      </tr>
       <tr>
         <td>Post - /api/create/school</td>
         <td>Post a school</td>
         <td>
-          schoolName: req.body.schoolName, schoolAddress:
-          req.body.schoolAddress, schoolPhone: req.body.schoolPhone,
-          schoolEmail: req.body.schoolEmail, schoolBankName:
-          req.body.schoolBankName, schoolAccountName:
-          req.body.schoolAccountName, schoolAccountNumber:
-          req.body.schoolAccountNumber,
+          req.body.schoolName, req.body.schoolAddress, req.body.schoolPhone,
+          req.body.schoolEmail, req.body.schoolBankName,
+          req.body.schoolAccountName, req.body.schoolAccountNumber,
         </td>
       </tr>
       <tr>
@@ -144,18 +160,20 @@
         <td>Patch - /api/school/:id</td>
         <td>Update a school</td>
         <td>
-          _id: req.params.id, Body--schoolName: req.body.schoolName,
-          schoolAddress: req.body.schoolAddress, schoolPhone:
-          req.body.schoolPhone, schoolEmail: req.body.schoolEmail,
-          schoolBankName: req.body.schoolBankName, schoolAccountName:
-          req.body.schoolAccountName, schoolAccountNumber:
-          req.body.schoolAccountNumber,
+          req.params.id, req.body.schoolName, req.body.schoolAddress,
+          req.body.schoolPhone, req.body.schoolEmail, req.body.schoolBankName,
+          req.body.schoolAccountName, req.body.schoolAccountNumber,
         </td>
       </tr>
       <tr>
         <td>Get - /api/school/user</td>
         <td>Get a user school</td>
         <td>res.json()</td>
+      </tr>
+      <tr> -->
+        <td style="font-weight: bolder; color: green; text-align: center">
+          WITHDRAWALS AND DEPOSITS
+        </td>
       </tr>
       <tr>
         <td>Patch - /api/user/account/addnaira</td>
@@ -182,11 +200,161 @@
         <td>Get a User Pending Withdrawal(s)</td>
         <td>res.json([])</td>
       </tr>
-      <!-- <tr>
-        <td>Patch - /api/user/account/referral</td>
-        <td>debit a User Referral Balance</td>
-        <td>req.body.amount</td>
-      </tr> -->
+      <!-- add child -->
+      <tr>
+        <td style="font-weight: bolder; color: green; text-align: center">
+          CHILD
+        </td>
+      </tr>
+      <tr>
+        <td>Post - /api/create/child</td>
+        <td>Add a Child to a parent</td>
+        <td>
+          req.body.referralCode, req.body.childName, req.body.childPhoto,
+          req.body.childDOB, req.body.childClass, req.body.childFaculty,
+          chireq.body.childDepartment, req.body.childClass, req.body.schoolName,
+          sreq.body.schoolAddress, req.body.schoolPhone, req.body.schoolEmail,
+          req.body.schoolBankName, req.body.schoolAccountName,
+          req.body.schoolAccountNumber,
+        </td>
+      </tr>
+      <tr>
+        <td>Get - /api/child</td>
+        <td>Get all Child assigned to a parent</td>
+        <td>
+          res.json([]). This is handled by the server. it responds with the
+          child/children of the logged in parent.
+        </td>
+      </tr>
+      <tr>
+        <td>Get - /api/child/:id</td>
+        <td>Get a single Child assigned to a parent</td>
+        <td>
+          req.params.id. this route responds with a child object when you pass
+          the Id
+        </td>
+      </tr>
+      <tr>
+        <td>Get - /api/child/:id</td>
+        <td>Update a single Child details</td>
+        <td>
+          This should be done by the parent. req.user.email, req.user.username,
+          par req.user.accountType, req.body.referralCode, req.body.childName,
+          req.body.childPhoto, req.body.childDOB, req.body.childClass,
+          req.body.childFaculty, req.body.childDepartment, req.body.childClass,
+          req.body.schoolName, req.body.schoolAddress, req.body.schoolPhone,
+          req.body.schoolEmail, req.body.schoolBankName,
+          req.body.schoolAccountName, req.body.schoolAccountNumber,
+        </td>
+      </tr>
+       <tr>
+        <td style="font-weight: bolder; color: green; text-align: center">
+          SPONSORHIPS
+        </td>
+        
+      </tr>
+      <tr>
+        <td>POST- /api/create/sponsorship</td>
+        <td>create a sponsorship request</td>
+        <td>req.body.message,
+         req.body.childFullname,
+        req.body.childReferralCode,
+        </td>
+      </tr>
+       <tr>
+        <td>DELETE- /api/sponsorship/:id</td>
+        <td>create a sponsorship request</td>
+        <td>req.params.id
+        </td>
+      </tr>
+      <tr>
+        <td>update- /api/sponsorship/:id</td>
+        <td>update a sponsorship request</td>
+        <td>req.params.id, req.body.message,
+            req.body.status,
+            req.body.childFullname,
+            req.body.childReferralCode,
+        </td>
+      </tr>
+      <tr>
+        <td>GET- /api/sponsorship/:id</td>
+        <td>get a sponsorship request</td>
+        <td>req.params.id
+        </td>
+      </tr>
+      <tr>
+        <td>GET- /api/sponsorship/</td>
+        <td>get all sponsorship requests</td>
+        <td>res.json([])
+        </td>
+      </tr>
+      <tr>
+        <td style="font-weight: bolder; color: green; text-align: center">
+          DONATIONS
+        </td>
+        
+      </tr>
+      <tr>
+        <td>POST- /api/create/donation</td>
+        <td>create a donation request</td>
+        <td>req.body.amount,
+         req.body.childFullname,
+        req.body.childReferralCode,
+        </td>
+      </tr>
+       <tr>
+        <td>DELETE- /api/donation/:id</td>
+        <td>create a donation request</td>
+        <td>req.params.id
+        </td>
+      </tr>
+      <tr>
+        <td>update- /api/donation/:id</td>
+        <td>update a donation request</td>
+        <td>req.params.id, req.body.amount,
+            req.body.status,
+            req.body.childFullname,
+            req.body.childReferralCode,
+        </td>
+      </tr>
+      <tr>
+        <td>GET- /api/donation/:id</td>
+        <td>get a donation request</td>
+        <td>req.params.id
+        </td>
+      </tr>
+      <tr>
+        <td>GET- /api/donation/</td>
+        <td>get all donation requests</td>
+        <td>res.json([])
+        </td>
+      </tr>
+      <tr>
+        <td style="font-weight: bolder; color: green; text-align: center">
+          NETWORK TREE
+        </td>
+        <td style=" color: green; text-align: center">
+          i created this route so you could test it out and suggest where it needs improvement
+        </td>
+         <td style=" color: green; text-align: center">
+          <!-- parent: this is the user who refers the child,
+          child: this is the user under the parent.,
+          For Example: <span style="font-weight: bold; letter-spacing: .2em;">Phase/level 1:</span>you created a new user with name :Jerry Felix**post this user as child and parent as null**, <span style="font-weight: bold; letter-spacing: .2em;">Next Phase/level:</span> Jerry Felix(parent) refers Jay Fe(child) and Josh Felix(child)**post Jay Fe and Josh Felix as child and parent as Jerry Felix**, <span style="font-weight: bold; letter-spacing: .2em;">Next Phase/level:</span> Josh Felix(parent) refers James Jerry(child) and Dennis Jerry(child)**post James Jerry and Dennis Jerry as child and parent as Josh Felix** -->
+            The post request will be handled by the server. Just check this out. i manually populated the database. please test out the get request
+        </td>
+      </tr>
+      <tr>
+        <td>GET- /api/network/:fullname</td>
+        <td> ---gets the network tree of a user. this has 99% probability that there will be no performance issue in future. the major issue is that we can only search below one level in the tree and you have to do alot data handling from the front end</td>
+        <td>res.json([]) , req.params.fullname
+        </td>
+      </tr>
+      <tr>
+        <td>GET- /api/networktwo/:fullname</td>
+        <td> gets the network tree of a user. this works perfectly and search all nodes/levels in the tree . the only issue is that performance error may occur when we have nodes with over 3k branches.(i.e one user with over 3k referrals) </td>
+        <td>res.json([]), req.params.fullname
+        </td>
+      </tr>
     </table>
   </body>
 </html>
