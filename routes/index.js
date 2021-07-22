@@ -1,23 +1,16 @@
 const express = require("express");
 require("dotenv").config();
 const actions = require("../methods/actions");
-const planactions = require("../methods/planActions");
-const userplanactions = require("../methods/userPlanActions");
-const notificationactions = require("../methods/notificationActions");
 const networkactions = require("../methods/networkActions");
-const childactions = require("../methods/childActions");
 const moneyactions = require("../methods/userMoneyActions");
-const withdrawalactions = require("../methods/withdrawalActions");
-const sponsorshiprequestactions = require("../methods/sponsorshipRequestAction");
-const donationrequestactions = require("../methods/donationRequestAction");
-const adminactions = require("../methods/adminActions");
+const questionnaireresponseactions = require("../methods/questionnaireResponseAction");
 
 const verify = require("../verifyToken");
 
 const router = express.Router();
 
 router.get("/dashboard", function (req, res) {
-  res.send("Hello Bro, this is a demo dashboard");
+  res.send("Welcome to Comic Blocks API");
 });
 
 router.get("/", function (req, res) {
@@ -35,7 +28,16 @@ router.get("/logout", function (req, res) {
 });
 
 //@desc add a new user
-router.post("/api/signup", actions.addNew);
+router.post("/api/signup", actions.signup);
+
+//@desc recover user account
+router.post("/api/recover_account", actions.recoverAccount);
+
+//@desc confirm a new/old user email
+router.post("/api/confirm_email", actions.confirmEmail);
+
+//@desc confirm a new/old user email
+router.post("/api/change_password", actions.updatePassword);
 
 //authenticate a user
 router.post("/api/login", actions.authenticate);
@@ -45,97 +47,10 @@ router.get("/api/getinfo", actions.getinfo);
 
 //UPDATE USER PROFILE
 //edit profile
-router.patch("/api/update/profile", verify, actions.updateProfile);
+// router.patch("/api/update/profile", verify, actions.updateProfile);
 
 //edit profile
-router.patch("/api/update/password", verify, actions.updatePassword);
-
-// ------------------------
-//CREATE A USER PLAN
-// -------------------------
-//@desc POST a Plan
-router.post("/api/create/userplan", verify, userplanactions.createUserPlan);
-//@desc DELETE a Plan
-router.delete("/api/userplan/:id", verify, userplanactions.deleteUserPlan);
-//@desc PATCH
-//edit a plan
-router.patch("/api/userplan/:id", verify, userplanactions.updateUserPlan);
-
-//get a plan
-router.get("/api/userplan/:id", verify, userplanactions.getSingleUserPlan);
-
-//@desc GET
-//get all  plan
-router.get("/api/userplan/", verify, userplanactions.getAllUserPlan);
-
-//CREATE A PLAN
-//@desc POST a Plan
-router.post("/api/create/plan", verify, planactions.createPlan);
-
-//@desc DELETE
-//delete a plan
-router.delete("/api/plan/:id", verify, planactions.deletePlan);
-
-//@desc PATCH
-//edit a plan
-router.patch("/api/plan/:id", verify, planactions.updatePlan);
-
-//@desc PATCH
-//get a plan
-router.get("/api/plan/:id", verify, planactions.getSinglePlan);
-
-//@desc GET
-//get all  plan
-router.get("/api/plan/", verify, planactions.getAllPlan);
-
-//NOTIFICATION
-//@desc POST a Notification
-router.post(
-  "/api/create/notification",
-  verify,
-  notificationactions.createNotification
-);
-
-//delete a Notification
-router.delete(
-  "/api/notification/:id",
-  verify,
-  notificationactions.deleteNotification
-);
-
-//update a Notification
-router.patch(
-  "/api/notification/:id",
-  verify,
-  notificationactions.updateNotification
-);
-
-//get a Notification
-router.get(
-  "/api/notification/:id",
-  verify,
-  notificationactions.getSingleNotification
-);
-
-//get all  Notification
-router.get(
-  "/api/notification/",
-  verify,
-  notificationactions.getAllNotification
-);
-
-//CHILD
-//@desc POST a Child
-router.post("/api/create/child", verify, childactions.createChild);
-
-//@desc GET all Child
-router.get("/api/child", verify, childactions.getAllChild);
-
-// get a Child
-router.get("/api/child/:id", verify, childactions.getSingleChild);
-
-// update a Child
-router.patch("/api/child/:id", verify, childactions.updateChild);
+// router.patch("/api/update/password", verify, actions.updatePassword);
 
 //USER MONEY
 // credit a User Naira Balance
@@ -162,20 +77,6 @@ router.patch(
 // get a User Balance
 router.get("/api/user/account/balance", verify, moneyactions.getUserBalance);
 
-// create a withdrawal order
-router.post(
-  "/api/user/pending/withdrawal",
-  verify,
-  withdrawalactions.createWithdrawal
-);
-
-// get a user withdrawal order
-router.get(
-  "/api/user/pending/withdrawal",
-  verify,
-  withdrawalactions.getWithdrawal
-);
-
 // CREATE Network/ORGANOGRAM
 // @desc POST
 router.post("/api/create/network", networkactions.createNetwork);
@@ -185,89 +86,38 @@ router.post("/api/create/network", networkactions.createNetwork);
 router.get("/api/network/:fullname", networkactions.getSpecificNetwork);
 router.get("/api/networktwo/:fullname", networkactions.getSpecificNetworkTwo);
 
-//CREATE SPONSORSHIP REQUEST
-//@desc POst a sponsorship request
-router.post(
-  "/api/create/sponsorship",
-  verify,
-  sponsorshiprequestactions.createSponsorshipRequest
-);
-//delete a sponsorship request
-router.delete(
-  "/api/sponsorship/:id",
-  verify,
-  sponsorshiprequestactions.deleteSponsorshipRequest
-);
-//update a sponsorship request
-router.patch(
-  "/api/sponsorship/:id",
-  verify,
-  sponsorshiprequestactions.updateSponsorshipRequest
-);
-
-//get a sponsorship request
-router.get(
-  "/api/sponsorship/:id",
-  verify,
-  sponsorshiprequestactions.getSingleSponsorshipRequest
-);
-
-//get all  sponsorship request
-router.get(
-  "/api/sponsorship",
-  verify,
-  sponsorshiprequestactions.getAllSponsorshipRequest
-);
-
 //CREATE DONATION REQUEST
-//@desc POst a donation request
+//@desc POst a Questionaire response
 router.post(
-  "/api/create/donation",
+  "/api/create/response",
   verify,
-  donationrequestactions.createDonationRequest
+  questionnaireresponseactions.createQuestionaireResponse
 );
-//delete a donation request
-router.delete(
-  "/api/donation/:id",
-  verify,
-  donationrequestactions.deleteDonationRequest
-);
-//update a donation request
-router.patch(
-  "/api/donation/:id",
-  verify,
-  donationrequestactions.updateDonationRequest
-);
+// //delete a donation request
+// router.delete(
+//   "/api/donation/:id",
+//   verify,
+//   donationrequestactions.deleteDonationRequest
+// );
+// //update a donation request
+// router.patch(
+//   "/api/donation/:id",
+//   verify,
+//   donationrequestactions.updateDonationRequest
+// );
 
-//get a donation request
-router.get(
-  "/api/donation/:id",
-  verify,
-  donationrequestactions.getSingleDonationRequest
-);
+// //get a donation request
+// router.get(
+//   "/api/donation/:id",
+//   verify,
+//   donationrequestactions.getSingleDonationRequest
+// );
 
-//get all  donation request
-router.get(
-  "/api/donation",
-  verify,
-  donationrequestactions.getAllDonationRequest
-);
-
-// //@desc GET
-// //fix. add user
-// router.get("/api/sponsorship/:id", sponsorshipactions.getSpecificSponsorship);
-
-//ADMIN FUNCTIONS
-//get all user
-router.get("/api/get/alluser", adminactions.getAllUser);
-
-//get a single user
-router.get("/api/get/user/:email", adminactions.getAUser);
-
-//get all withdrawal
-router.get("/api/get/allwithdrawal", adminactions.getAllWithdrawal);
-
-//accept a withdrawal
-router.get("/api/approve/withdrawal/:id", adminactions.approveWithdrawal);
+// //get all  donation request
+// router.get(
+//   "/api/donation",
+//   verify,
+//   donationrequestactions.getAllDonationRequest
+// );
 
 module.exports = router;

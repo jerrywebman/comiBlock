@@ -2,18 +2,6 @@ var mongoose = require("mongoose");
 var schema = mongoose.Schema;
 var bcrypt = require("bcrypt");
 var userSchema = new mongoose.Schema({
-  accountType: {
-    type: String,
-    require: true,
-    min: 2,
-    max: 255,
-  },
-  fullname: {
-    type: String,
-    require: true,
-    min: 2,
-    max: 255,
-  },
   email: {
     type: String,
     require: true,
@@ -22,60 +10,45 @@ var userSchema = new mongoose.Schema({
     min: 6,
     max: 255,
   },
-  // gender: {
-  //   type: String,
-  //   require: true,
-  // },
-  // dateOfBirth: {
-  //   type: Date,
-  //   require: true,
-  // },
-  // phone: {
-  //   type: Number,
-  //   require: true,
-  //   unique: true,
-  //   min: 11,
-  //   max: 255,
-  // },
-  username: {
-    type: String,
-    require: true,
-    unique: true,
-    min: 3,
-    max: 255,
-  },
   password: {
     type: String,
     require: true,
     min: 6,
     max: 255,
   },
-  stateOfOrigin: {
+  firstname: {
     type: String,
     require: true,
+    min: 2,
+    max: 255,
   },
-  address: {
+  Surname: {
     type: String,
     require: true,
-  },
-  town: {
-    type: String,
-    require: true,
-  },
-  lgaArea: {
-    type: String,
-    require: true,
+    min: 2,
+    max: 255,
   },
   phone: {
     type: Number,
     require: true,
+    unique: true,
   },
-  // nokAddress: {
-  //   type: String,
-  //   require: true,
-  //   min: 6,
-  //   max: 255,
-  // },
+  occupation: {
+    type: String,
+    require: true,
+  },
+  dateOfBirth: {
+    type: String,
+    require: true,
+  },
+  verifyCode: {
+    type: Number,
+    require: true,
+  },
+  verified: {
+    type: Boolean,
+    default: false,
+  },
   dateJoined: {
     type: Date,
     default: Date.now,

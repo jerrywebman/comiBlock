@@ -1,32 +1,47 @@
 var User = require("../models/user");
 var Money = require("../models/money");
-// var UserReferral = require("../models/userReferral");
 var jwt = require("jwt-simple");
 var config = require("../config/dbconfig");
 const { token } = require("morgan");
 var bcrypt = require("bcrypt");
+const nodemailer = require("nodemailer");
 
 var functions = {
-  addNew: async function (req, res) {
+  signup: async function (req, res) {
+    // Function to generate OTP
+    function generateOTP() {
+      // Declare a digits variable
+      // which stores all digits
+      var digits = "0123456789";
+      let OTP = "";
+      for (let i = 0; i < 6; i++) {
+        OTP += digits[Math.floor(Math.random() * 10)];
+      }
+      return OTP;
+    }
+    const generatedOTP = generateOTP();
+
     let userEmail = await User.findOne({ email: req.body.email });
-    let userUsername = await User.findOne({ username: req.body.username });
+    let userphone = await User.findOne({ phone: req.body.phone });
     if (
-      !req.body.accountType ||
-      !req.body.fullname ||
+      !req.body.phone ||
+      !req.body.firstname ||
+      !req.body.surname ||
       !req.body.email ||
-      !req.body.username ||
+      !req.body.occupation ||
+      !req.body.dateOfBirth ||
       !req.body.password
     ) {
       res.json({ success: false, msg: "Enter all fields" });
     } else if (userEmail) {
       return res.status(400).send({
         success: false,
-        msg: "a user with this email already exists!",
+        msg: "a user with this email address already exists!",
       });
-    } else if (userUsername) {
+    } else if (userphone) {
       return res.status(400).send({
         success: false,
-        msg: "a user with this username already exists!",
+        msg: "a user with this Phone number already exists!",
       });
     } else {
       //CREATING A NEW USER Money
@@ -34,9 +49,9 @@ var functions = {
         const newMoney = {
           _id: req.body.email,
           userEmail: req.body.email,
-          userUsername: req.body.username,
-          userFullname: req.body.fullname,
-          accountType: req.body.accountType,
+          userFirstname: req.body.firstname,
+          userSurname: req.body.surname,
+          occupation: req.body.occupation,
           nairaBalance: 0,
           referralBonusBalance: 0,
         };
@@ -46,10 +61,13 @@ var functions = {
       }
       //CREATING A NEW USER
       var newUser = User({
-        accountType: req.body.accountType,
-        fullname: req.body.fullname,
+        firstname: req.body.firstname,
+        surname: req.body.surname,
+        phone: req.body.phone,
+        occupation: req.body.occupation,
+        dateOfBirth: req.body.dateOfBirth,
+        verifyCode: Number(generatedOTP),
         email: req.body.email,
-        username: req.body.username,
         password: req.body.password,
       });
       newUser.save(function (err, newUser) {
@@ -60,44 +78,101 @@ var functions = {
             err,
           });
         } else {
+          //send an email here
+          //step 1
+          //ALLOW LESS SECURE APPS TO MAKE THIS WORK
+          let transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+              user: process.env.NODEMAILER_EMAIL,
+              pass: process.env.NODEMAILER_PASSWORD,
+            },
+          });
+
+          //step 2
+          let mailOptions = {
+            from: "jaytest@gmail.com",
+            to: req.body.email,
+            subject: "Testing the email function",
+            text: `Welcome Felix, This our work no easy o. But this is the otp sha. if e work for u thank God ${generatedOTP}-- if e no work sorry o.`,
+          };
+
+          //step3
+          transporter.sendMail(mailOptions, function (err, data) {
+            if (err) {
+              console.log("error occurs");
+            } else {
+              console.log("Email Sent");
+            }
+          });
+
           res.json({ success: true, msg: "User Successfully Saved" });
         }
       });
     }
   },
-
-  updateProfile: async function (req, res) {
-    if (
-      !req.body.stateOfOrigin ||
-      !req.body.address ||
-      !req.body.lgaArea ||
-      !req.body.phone ||
-      !req.body.town
-    ) {
-      res.json({ success: false, msg: "Enter all fields" });
-    } else if (!req.user.email) {
+  //RECOVER USER ACCOUNT
+  recoverAccount: async function (req, res) {
+    let userEmail = await User.findOne({ email: req.body.email });
+    if (!req.body.email) {
+      res.json({ success: false, msg: "Please Enter an Email address" });
+    } else if (!userEmail) {
       return res.status(400).send({
         success: false,
         msg: "There is no user with this email address!",
       });
     } else {
-      //Updating the user Profile
+      //updating the otp code area and send email to user
+      // Function to generate OTP
+      function generateOTP() {
+        // Declare a digits variable
+        // which stores all digits
+        var digits = "0123456789";
+        let OTP = "";
+        for (let i = 0; i < 6; i++) {
+          OTP += digits[Math.floor(Math.random() * 10)];
+        }
+        return OTP;
+      }
+      const generatedOTP = generateOTP();
+      //NOW I HAVE THE OTP, SEND IT TO THE DATABASE
       try {
         const updatedProfile = await User.updateOne(
-          { email: req.user.email },
+          { email: req.body.email },
           {
             $set: {
-              stateOfOrigin: req.body.stateOfOrigin,
-              address: req.body.address,
-              phone: req.body.phone,
-              town: req.body.town,
-              lgaArea: req.body.lgaArea,
+              verifyCode: Number(generatedOTP),
             },
           }
-        );
+        ).then(() => {
+          //step 1
+          let transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+              user: process.env.NODEMAILER_EMAIL,
+              pass: process.env.NODEMAILER_PASSWORD,
+            },
+          });
+          //step 2
+          let mailOptions = {
+            from: "comiblock@gmail.com",
+            to: req.body.email,
+            subject: "OTP FROM COMIBLOCK",
+            text: `you got this email because you are trying to recover your account. Please use this OTP -- ${generatedOTP} -- to create a new password`,
+          };
+
+          //step3
+          transporter.sendMail(mailOptions, function (err, data) {
+            if (err) {
+              console.log("error occurs");
+            } else {
+              console.log("Email Sent");
+            }
+          });
+        });
         res.json({
           success: true,
-          Message: "Profile Successfully updated",
+          Message: "OTP successfully sent to users email",
         });
       } catch (err) {
         res.json({ message: err });
@@ -105,67 +180,93 @@ var functions = {
     }
   },
 
-  //update the user password
+  //CONFIRM EMAIL ADDRESS
+  confirmEmail: async function (req, res) {
+    let userEmail = await User.findOne({ email: req.body.email });
+    const theEmail = req.body.email;
+    if (!req.body.email) {
+      res.json({ success: false, msg: "Please Enter an Email address" });
+    } else if (!userEmail) {
+      return res.status(400).send({
+        success: false,
+        msg: "There is no user with this email address!",
+      });
+    } else if (Number(userEmail.verifyCode) !== Number(req.body.verifyCode)) {
+      return res.status(400).send({
+        success: false,
+        msg: "Wrong OTP Password",
+      });
+    } else {
+      try {
+        const updatedPassword = User.updateOne(
+          { email: theEmail },
+          {
+            $set: {
+              verified: true,
+            },
+          }
+        ).then(() => {
+          res.json({ success: true, msg: "OTP is correct" });
+        });
+      } catch (err) {
+        res.send({ message: err });
+      }
+    }
+  },
+
+  //CREATE NEW/UPDATE PASSWORD
+  //update the user password when user is not signed in
   updatePassword: async function (req, res) {
+    const userEmailAddress = req.body.email;
     User.findOne(
       {
-        email: req.user.email,
+        email: userEmailAddress,
       },
       function (err, user) {
         if (err) throw err;
         if (!user) {
           res.status(403).send({
             success: false,
-            msg: "Authentication Failed, user email or password does not exist",
+            msg: "User does not exist",
+          });
+        } else if (user && req.body.confirmPassword === !req.body.newPassword) {
+          res.status(400).send({
+            success: false,
+            msg: "Password did not match",
           });
         } else {
-          user.comparePassword(
-            req.body.oldPassword,
-            async function (err, isMatch) {
-              if (
-                isMatch &&
-                !err &&
-                req.body.confirmPassword === req.body.newPassword
-              ) {
-                //UPDATE THE PASSWORD
-                try {
-                  bcrypt.genSalt(10, function (err, salt) {
-                    if (err) {
-                      return next(err);
-                    }
-                    bcrypt.hash(
-                      req.body.newPassword,
-                      salt,
-                      async function (err, hash) {
-                        if (err) {
-                          return next(err);
-                        }
-                        const updatedPassword = await User.updateOne(
-                          { email: req.user.email },
-                          {
-                            $set: {
-                              password: hash,
-                            },
-                          }
-                        );
-                      }
-                    );
-                  });
-                  res.json({
-                    success: true,
-                    Message: "Password Successfully updated",
-                  });
-                } catch (err) {
-                  res.json({ message: err });
-                }
-              } else {
-                return res.status(403).send({
-                  success: false,
-                  msg: "Password Reset Failed, Password Does not match",
-                });
+          //CHANGE THE PASSWORD
+          try {
+            bcrypt.genSalt(10, function (err, salt) {
+              if (err) {
+                return next(err);
               }
-            }
-          );
+              bcrypt.hash(
+                req.body.newPassword,
+                salt,
+                async function (err, hash) {
+                  if (err) {
+                    return next(err);
+                  }
+                  const updatedPassword = await User.updateOne(
+                    { email: userEmailAddress },
+                    {
+                      $set: {
+                        password: hash,
+                        verified: true,
+                      },
+                    }
+                  );
+                }
+              );
+            });
+            res.json({
+              success: true,
+              Message: "Password Successfully updated",
+            });
+          } catch (err) {
+            res.json({ message: err });
+          }
         }
       }
     );
@@ -212,9 +313,13 @@ var functions = {
       return res.json({
         id: decodedtoken._id,
         success: true,
-        fullname: decodedtoken.fullname,
-        username: decodedtoken.username,
+        firstname: decodedtoken.firstname,
+        surname: decodedtoken.surname,
+        occupation: decodedtoken.occupation,
+        phone: decodedtoken.phone,
         email: decodedtoken.email,
+        verified: decodedtoken.verified,
+        dateOfBirth: decodedtoken.dateOfBirth,
         dateJoined: decodedtoken.dateJoined,
       });
     } else {

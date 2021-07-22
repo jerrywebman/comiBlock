@@ -1,5 +1,4 @@
 var Money = require("../models/money");
-var Transaction = require("../models/Transaction");
 
 var functions = {
   //update naira balance credit
