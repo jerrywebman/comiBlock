@@ -35,7 +35,7 @@ app.use("/profile", express.static("upload/images"));
 app.post("/api/upload", upload.single("profile"), (req, res) => {
   res.json({
     success: 1,
-    profile_url: `http://localhost:4000/profile/${req.file.filename}`,
+    profile_url: `https://comiblock.herokuapp.com/profile/${req.file.filename}`,
   });
 });
 
