@@ -87,6 +87,63 @@
         <td>Response with auth user details</td>
         <td>res.json({});</td>
       </tr>
+      <tr>
+        <td style="font-weight: bolder; color: green; text-align: center">
+          Risk Tolerance and Crypto Exposure assessment
+        </td>
+      </tr>
+      <tr>
+        <td>POST-/api/user/create/assessment</td>
+        <td>Creates User assessment data</td>
+        <td>
+          { question: req.body.assessmentOneQ, answer: req.body.assessmentOneA,
+          }, { question: req.body.assessmentTwoQ, answer:
+          req.body.assessmentTwoA, }, { question: req.body.assessmentThreeQ,
+          answer: req.body.assessmentThreeA, }, { question:
+          req.body.assessmentFourQ, answer: req.body.assessmentFourA, }, {
+          question: req.body.riskOneQ, answer: req.body.riskOneA, }, { question:
+          req.body.riskTwoQ, answer: req.body.riskTwoA, }, { question:
+          req.body.riskThreeQ, answer: req.body.riskThreeA, }, { question:
+          req.body.riskFourQ, answer: req.body.riskFourA, },
+        </td>
+      </tr>
+      <tr>
+        <td>GET-/api/user/get/assessment</td>
+        <td>Responds with all user responses</td>
+        <td>res.json({});</td>
+      </tr>
+      <tr>
+        <td style="font-weight: bolder; color: green; text-align: center">
+          Portfolio
+        </td>
+      </tr>
+      <tr>
+        <td>POST-/api/portfolio/create</td>
+        <td>Creates comic block Portfolio</td>
+        <td>
+          name: req.body.name, intro: req.body.intro, briefing:
+          req.body.briefing, strategySnapshot: req.body.strategySnapshot,
+          holdings: [req.body.btc, req.body.eth, req.body.usdt],
+          portfolioStrategy: req.body.portfolioStrategy, portfolioType:
+          req.body.portfolioType, subscription: req.body.subscription,
+          subscriptionAmount: req.body.subscriptionAmount,
+        </td>
+      </tr>
+      <tr>
+        <td>GET-/api/portfolio</td>
+        <td>Responds with all portfolio</td>
+        <td>res.json([]);</td>
+      </tr>
+      <tr>
+        <td>GET-/api/portfolio/:id</td>
+        <td>GETS a portfolio</td>
+        <td>req.params.id, res.json({});</td>
+      </tr>
+      <tr>
+        <td>DELETE-/api/portfolio/:id</td>
+        <td>DEL a portfolio</td>
+        <td>req.params.id</td>
+      </tr>
     </table>
   </body>
 </html>

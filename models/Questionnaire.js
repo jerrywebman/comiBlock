@@ -16,38 +16,11 @@ var questionnaireSchema = new mongoose.Schema({
     min: 2,
     max: 255,
   },
-  assessmentOne: {
-    type: Object,
+  assessments: {
+    type: Array,
     require: true,
   },
-  assessmentTwo: {
-    type: Object,
-    require: true,
-  },
-  assessmentThree: {
-    type: Object,
-    require: true,
-  },
-  assessmentFour: {
-    type: Object,
-    require: true,
-  },
-  riskOne: {
-    type: Object,
-    require: true,
-  },
-  riskTwo: {
-    type: Object,
-    require: true,
-  },
-  riskThree: {
-    type: Object,
-    require: true,
-  },
-  riskFour: {
-    type: Object,
-    require: true,
-  },
+
   createdAt: {
     type: Date,
     require: true,

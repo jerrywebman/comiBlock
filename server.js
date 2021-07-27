@@ -3,6 +3,8 @@ const morgan = require("morgan");
 const cors = require("cors");
 const connectDB = require("./config/db");
 const passport = require("passport");
+const multer = require("multer");
+const path = require("path");
 
 //get routes
 const routes = require("./routes/index");
@@ -10,6 +12,43 @@ const routes = require("./routes/index");
 connectDB();
 
 const app = express();
+
+// file upload starts
+
+const storage = multer.diskStorage({
+  destination: "./upload/images",
+  filename: (req, file, cb) => {
+    return cb(
+      null,
+      `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`
+    );
+  },
+});
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 100000,
+  },
+});
+app.use("/profile", express.static("upload/images"));
+app.post("/api/upload", upload.single("profile"), (req, res) => {
+  res.json({
+    success: 1,
+    profile_url: `http://localhost:4000/profile/${req.file.filename}`,
+  });
+});
+
+function errHandler(err, req, res, next) {
+  if (err instanceof multer.MulterError) {
+    res.json({
+      success: 0,
+      message: err.message,
+    });
+  }
+}
+app.use(errHandler);
+///files upload ends here
 
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));

@@ -6,44 +6,46 @@ var functions = {
     if (!req.user.email) {
       res.json({
         success: false,
-        msg: "Please select login to hit this endpoint",
+        msg: "User must be logged in to hit this endpoint",
       });
     } else {
       var newQuestionnaireRequest = Questionnaire({
         userEmail: req.user.email,
-        userFirstname: req.user.userFirstname,
-        assessmentOne: {
-          question: req.body.assessmentOneQ,
-          answer: req.body.assessmentOneA,
-        },
-        assessmentTwo: {
-          question: req.body.assessmentTwoQ,
-          answer: req.body.assessmentTwoA,
-        },
-        assessmentThree: {
-          question: req.body.assessmentThreeQ,
-          answer: req.body.assessmentThreeA,
-        },
-        assessmentFour: {
-          question: req.body.assessmentFourQ,
-          answer: req.body.assessmentFourA,
-        },
-        riskOne: {
-          question: req.body.riskOneQ,
-          answer: req.body.riskOneA,
-        },
-        riskTwo: {
-          question: req.body.riskTwoQ,
-          answer: req.body.riskTwoA,
-        },
-        riskThree: {
-          question: req.body.riskThreeQ,
-          answer: req.body.riskThreeA,
-        },
-        riskFour: {
-          question: req.body.riskFourQ,
-          answer: req.body.riskFourA,
-        },
+        userFirstname: req.user.firstname,
+        assessments: [
+          {
+            question: req.body.assessmentOneQ,
+            answer: req.body.assessmentOneA,
+          },
+          {
+            question: req.body.assessmentTwoQ,
+            answer: req.body.assessmentTwoA,
+          },
+          {
+            question: req.body.assessmentThreeQ,
+            answer: req.body.assessmentThreeA,
+          },
+          {
+            question: req.body.assessmentFourQ,
+            answer: req.body.assessmentFourA,
+          },
+          {
+            question: req.body.riskOneQ,
+            answer: req.body.riskOneA,
+          },
+          {
+            question: req.body.riskTwoQ,
+            answer: req.body.riskTwoA,
+          },
+          {
+            question: req.body.riskThreeQ,
+            answer: req.body.riskThreeA,
+          },
+          {
+            question: req.body.riskFourQ,
+            answer: req.body.riskFourA,
+          },
+        ],
       });
       newQuestionnaireRequest.save(function (err, Questionnaire) {
         if (err) {
@@ -58,6 +60,16 @@ var functions = {
           });
         }
       });
+    }
+  },
+
+  // GET ALL DonationRequest
+  getAllAssessmenResult: async function (req, res) {
+    try {
+      const allQuestionnaireRequest = await Questionnaire.find();
+      res.json(allQuestionnaireRequest);
+    } catch (err) {
+      res.json({ message: err });
     }
   },
 
@@ -103,16 +115,6 @@ var functions = {
   //       success: true,
   //       Message: "Donation Request Successfully updated",
   //     });
-  //   } catch (err) {
-  //     res.json({ message: err });
-  //   }
-  // },
-
-  //GET ALL DonationRequest
-  // getAllDonationRequest: async function (req, res) {
-  //   try {
-  //     const allDonationRequest = await DonationRequest.find();
-  //     res.json(allDonationRequest);
   //   } catch (err) {
   //     res.json({ message: err });
   //   }
