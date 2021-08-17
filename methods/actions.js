@@ -94,7 +94,7 @@ var functions = {
             from: "jaytest@gmail.com",
             to: req.body.email,
             subject: "Testing the email function",
-            text: `Welcome Felix, This our work no easy o. But this is the otp sha. if e work for u thank God ${generatedOTP}-- if e no work sorry o.`,
+            text: `Welcome Henry, The user is supposed to get this OTP on signup *** ${generatedOTP}***`,
           };
 
           //step3
@@ -106,7 +106,7 @@ var functions = {
             }
           });
 
-          res.json({ success: true, msg: "User Successfully Saved" });
+          res.json({ success: true, msg: "User Account Successfully Created" });
         }
       });
     }
@@ -203,6 +203,7 @@ var functions = {
           {
             $set: {
               verified: true,
+              verifyCode: 0,
             },
           }
         ).then(() => {

@@ -2,26 +2,43 @@
   <head>
     <style>
       table {
-        font-family: arial, sans-serif;
-        border-collapse: collapse;
+        border: 1px solid #ccc;
+        margin: 0;
+        padding: 0;
         width: 100%;
       }
 
-      td,
-      th {
-        border: 1px solid #dddddd;
-        text-align: left;
-        padding: 8px;
+      table caption {
+        font-size: 1.5em;
+        margin: 0.5em 0 0.75em;
       }
 
-      tr:nth-child(even) {
-        background-color: #dddddd;
+      table tr {
+        background-color: #f8f8f8;
+        border: 1px solid #ddd;
+        padding: 0.35em;
+      }
+
+      table th,
+      table td {
+        padding: 0.625em;
+      }
+
+      table th {
+        font-size: 0.85em;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
       }
     </style>
   </head>
   <body>
-    <h1>Welcome Bro, These are the existing API Endpoints</h1>
     <table>
+      <caption>
+        Welcome Bro, These are the existing API Endpoints
+      </caption>
+      <caption>
+        Base Route: https://comiblock.herokuapp.com/
+      </caption>
       <tr>
         <th>Route</th>
         <th>Action</th>
@@ -143,6 +160,19 @@
         <td>DELETE-/api/portfolio/:id</td>
         <td>DEL a portfolio</td>
         <td>req.params.id</td>
+      </tr>
+      <tr>
+        <td style="font-weight: bolder; color: green; text-align: center">
+          Upload selfie and id card
+        </td>
+      </tr>
+      <tr>
+        <td>POST-/api/upload</td>
+        <td>uploads both govtId and a selfie file to the comiblock db</td>
+        <td>
+          pass two file input fields with name "profiles". by default the first
+          one will be the govtId and the second will be the selfie.
+        </td>
       </tr>
     </table>
   </body>

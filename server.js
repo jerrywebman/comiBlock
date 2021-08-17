@@ -5,6 +5,8 @@ const connectDB = require("./config/db");
 const passport = require("passport");
 const multer = require("multer");
 const path = require("path");
+var Verification = require("./models/verification");
+const verify = require("./verifyToken");
 
 //get routes
 const routes = require("./routes/index");
@@ -20,7 +22,7 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => {
     return cb(
       null,
-      `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`
+      `${req.user.email}_${Date.now()}${path.extname(file.originalname)}`
     );
   },
 });
@@ -32,10 +34,28 @@ const upload = multer({
   },
 });
 app.use("/profile", express.static("upload/images"));
-app.post("/api/upload", upload.single("profile"), (req, res) => {
-  res.json({
-    success: 1,
-    profile_url: `https://comiblock.herokuapp.com/profile/${req.file.filename}`,
+app.post("/api/upload", verify, upload.array("profiles", 2), (req, res) => {
+  var newVerification = Verification({
+    userEmail: req.user.email,
+    userFirstname: req.user.firstname,
+    userSurname: req.user.surname,
+    govtIdUrl: `https://comiblock.herokuapp.com/profile/${req.files[0].filename}`,
+    selfieUrl: `https://comiblock.herokuapp.com/profile/${req.files[1].filename}`,
+  });
+  newVerification.save(function (err, Verification) {
+    if (err) {
+      res.json({
+        success: false,
+        msg: "Failed to Save Verification details",
+      });
+    } else {
+      res.json({
+        success: true,
+        msg: "successfully created Verification details",
+        govtIdUrl: `https://comiblock.herokuapp.com/profile/${req.files[0].filename}`,
+        selfieUrl: `https://comiblock.herokuapp.com/profile/${req.files[1].filename}`,
+      });
+    }
   });
 });
 
