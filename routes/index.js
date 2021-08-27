@@ -1,8 +1,8 @@
 const express = require("express");
 require("dotenv").config();
 const actions = require("../methods/actions");
-// const networkactions = require("../methods/networkActions");
-// const moneyactions = require("../methods/userMoneyActions");
+const transactionactions = require("../methods/transactionsActions");
+const moneyactions = require("../methods/userMoneyActions");
 const assessment = require("../methods/questionnaireResponseAction");
 const portfolio = require("../methods/portfolioActions");
 
@@ -38,7 +38,7 @@ router.post("/api/recover_account", actions.recoverAccount);
 router.post("/api/confirm_email", actions.confirmEmail);
 
 //@desc confirm a new/old user email
-router.post("/api/change_password", actions.updatePassword);
+router.post("/api/change_password", verify, actions.updatePassword);
 
 //authenticate a user
 router.post("/api/login", actions.authenticate);
@@ -71,37 +71,36 @@ router.delete("/api/portfolio/:id", portfolio.deletePortfolio);
 // //update a donation request
 router.get("/api/portfolio/:id", portfolio.getSinglePortfolio);
 
-//UPDATE USER PROFILE
-//edit profile
-// router.patch("/api/update/profile", verify, actions.updateProfile);
-
-//edit profile
-// router.patch("/api/update/password", verify, actions.updatePassword);
-
 //USER MONEY
-// credit a User Naira Balance
-// router.post(
-//   "/api/user/create/assessment",
-//   verify,
-//   assessment.createQuestionaireResponse
-// );
+// credit a User Balance
+router.post("/api/user/credit/balance", moneyactions.addToUserBalance);
 
-// credit a User Naira Balance
-// router.patch(
-//   "/api/user/account/minusnaira",
-//   verify,
-//   moneyactions.minusNairaBalance
-// );
-
-// update a User Referral Balance
-// router.patch(
-//   "/api/user/account/referral",
-//   verify,
-//   moneyactions.updateReferralBalance
-// );
+// debit a User Balance
+router.post("/api/user/debit/balance", moneyactions.minusFromUserBalance);
 
 // get a User Balance
-// router.get("/api/user/account/balance", verify, moneyactions.getUserBalance);
+router.get("/api/user/balance", verify, moneyactions.getUserBalance);
+
+//USER TRANSACTIONS
+
+// get a User Transactions
+router.get(
+  "/api/user/transactions",
+  verify,
+  transactionactions.getAllUserTransaction
+);
+// get a User Deposit Transactions
+router.get(
+  "/api/user/transactions/deposit",
+  verify,
+  transactionactions.getAllUserDepositTransaction
+);
+// get a User withdrawal Transactions
+router.get(
+  "/api/user/transactions/withdrawal",
+  verify,
+  transactionactions.getAllUserWithdrawalTransaction
+);
 
 // CREATE Network/ORGANOGRAM
 // @desc POST
@@ -111,5 +110,11 @@ router.get("/api/portfolio/:id", portfolio.getSinglePortfolio);
 //fix. add user
 // router.get("/api/network/:fullname", networkactions.getSpecificNetwork);
 // router.get("/api/networktwo/:fullname", networkactions.getSpecificNetworkTwo);
+//UPDATE USER PROFILE
+//edit profile
+// router.patch("/api/update/profile", verify, actions.updateProfile);
+
+//edit profile
+// router.patch("/api/update/password", verify, actions.updatePassword);
 
 module.exports = router;

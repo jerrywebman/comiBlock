@@ -16,15 +16,23 @@ var moneySchema = new mongoose.Schema({
     type: String,
     require: true,
   },
-  userFullname: {
+  userFirstname: {
     type: String,
     require: true,
   },
-  nairaBalance: {
+  userSurname: {
+    type: String,
+    require: true,
+  },
+  investmentBalance: {
     type: Number,
   },
   referralBonusBalance: {
     type: Number,
+  },
+  lastUpdated: {
+    type: Date,
+    default: Date.now,
   },
 });
 

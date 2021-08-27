@@ -92,7 +92,10 @@
       <tr>
         <td>PATCH-/api/update/password</td>
         <td>Update Password</td>
-        <td>req.body.email,req.body.confirmPassword,req.body.newPassword</td>
+        <td>
+          req.user.email,req.body.confirmPassword,req.body.newPassword .
+          password must be 6 or more characters long
+        </td>
       </tr>
       <tr>
         <td>POST-/api/login</td>
@@ -173,6 +176,41 @@
           pass two file input fields with name "profiles". by default the first
           one will be the govtId and the second will be the selfie.
         </td>
+      </tr>
+      <tr>
+        <td style="font-weight: bolder; color: green; text-align: center">
+          User Balance
+        </td>
+      </tr>
+      <tr>
+        <td>GET-/api/user/balance</td>
+        <td>
+          return a json object containing the user balance, last date updated
+          etc
+        </td>
+        <td>User needs to be signed in. res.json({})</td>
+      </tr>
+      <tr>
+        <td style="font-weight: bolder; color: green; text-align: center">
+          User Transactions
+        </td>
+      </tr>
+      <tr>
+        <td>GET-/api/user/transactions</td>
+        <td>return a json object containing the user transactions</td>
+        <td>User needs to be signed in. res.json({})</td>
+      </tr>
+      <tr>
+        <td>GET-/api/user/transactions/deposit</td>
+        <td>return a json object containing the user deposit transactions</td>
+        <td>User needs to be signed in. res.json({})</td>
+      </tr>
+      <tr>
+        <td>GET-/api/user/transactions/withdrawal</td>
+        <td>
+          return a json object containing the user withdrawal transactions
+        </td>
+        <td>User needs to be signed in. res.json({})</td>
       </tr>
     </table>
   </body>

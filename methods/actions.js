@@ -23,6 +23,7 @@ var functions = {
 
     let userEmail = await User.findOne({ email: req.body.email });
     let userphone = await User.findOne({ phone: req.body.phone });
+    let userPassword = req.body.password;
     if (
       !req.body.phone ||
       !req.body.firstname ||
@@ -43,6 +44,11 @@ var functions = {
         success: false,
         msg: "a user with this Phone number already exists!",
       });
+    } else if (userPassword < 6) {
+      return res.status(400).send({
+        success: false,
+        msg: "Password must be 6 or more character long",
+      });
     } else {
       //CREATING A NEW USER Money
       try {
@@ -52,7 +58,7 @@ var functions = {
           userFirstname: req.body.firstname,
           userSurname: req.body.surname,
           occupation: req.body.occupation,
-          nairaBalance: 0,
+          investmentBalance: 0,
           referralBonusBalance: 0,
         };
         await new Money(newMoney).save();
@@ -218,7 +224,10 @@ var functions = {
   //CREATE NEW/UPDATE PASSWORD
   //update the user password when user is not signed in
   updatePassword: async function (req, res) {
-    const userEmailAddress = req.body.email;
+    const userEmailAddress = req.user.email;
+    let passConfirmString = req.body.confirmPassword;
+    let passConfirmNewString = req.body.newPassword;
+
     User.findOne(
       {
         email: userEmailAddress,
@@ -228,12 +237,20 @@ var functions = {
         if (!user) {
           res.status(403).send({
             success: false,
-            msg: "User does not exist",
+            msg: "Please sign in to change your password",
           });
         } else if (user && req.body.confirmPassword === !req.body.newPassword) {
           res.status(400).send({
             success: false,
             msg: "Password did not match",
+          });
+        } else if (
+          passConfirmString.length < 6 ||
+          passConfirmNewString.length < 6
+        ) {
+          res.status(400).send({
+            success: false,
+            msg: "Password not secure. it must be 6 characters or more",
           });
         } else {
           //CHANGE THE PASSWORD
