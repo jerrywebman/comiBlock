@@ -10,7 +10,7 @@ var questionnaireSchema = new mongoose.Schema({
     min: 6,
     max: 255,
   },
-  userFirstname: {
+  userFullname: {
     type: String,
     require: true,
     min: 2,

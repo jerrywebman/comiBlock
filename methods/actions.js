@@ -26,9 +26,9 @@ var functions = {
     let userPassword = req.body.password;
     if (
       !req.body.phone ||
-      !req.body.firstname ||
-      !req.body.surname ||
+      !req.body.fullname ||
       !req.body.email ||
+      !req.body.address ||
       !req.body.occupation ||
       !req.body.dateOfBirth ||
       !req.body.password
@@ -55,8 +55,7 @@ var functions = {
         const newMoney = {
           _id: req.body.email,
           userEmail: req.body.email,
-          userFirstname: req.body.firstname,
-          userSurname: req.body.surname,
+          userFullname: req.body.firstname,
           occupation: req.body.occupation,
           investmentBalance: 0,
           referralBonusBalance: 0,
@@ -67,10 +66,10 @@ var functions = {
       }
       //CREATING A NEW USER
       var newUser = User({
-        firstname: req.body.firstname,
-        surname: req.body.surname,
+        fullname: req.body.fullname,
         phone: req.body.phone,
         occupation: req.body.occupation,
+        address: req.body.address,
         dateOfBirth: req.body.dateOfBirth,
         verifyCode: Number(generatedOTP),
         email: req.body.email,
@@ -331,9 +330,9 @@ var functions = {
       return res.json({
         id: decodedtoken._id,
         success: true,
-        firstname: decodedtoken.firstname,
-        surname: decodedtoken.surname,
+        fullname: decodedtoken.fullname,
         occupation: decodedtoken.occupation,
+        address: decodedtoken.address,
         phone: decodedtoken.phone,
         email: decodedtoken.email,
         verified: decodedtoken.verified,

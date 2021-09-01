@@ -34,31 +34,101 @@ const upload = multer({
   },
 });
 app.use("/profile", express.static("upload/images"));
-app.post("/api/upload", verify, upload.array("profiles", 2), (req, res) => {
-  var newVerification = Verification({
-    userEmail: req.user.email,
-    userFirstname: req.user.firstname,
-    userSurname: req.user.surname,
-    govtIdUrl: `https://comiblock.herokuapp.com/profile/${req.files[0].filename}`,
-    selfieUrl: `https://comiblock.herokuapp.com/profile/${req.files[1].filename}`,
-  });
-  newVerification.save(function (err, Verification) {
-    if (err) {
-      res.json({
-        success: false,
-        msg: "Failed to Save Verification details",
-      });
-    } else {
-      res.json({
-        success: true,
-        msg: "successfully created Verification details",
-        govtIdUrl: `https://comiblock.herokuapp.com/profile/${req.files[0].filename}`,
-        selfieUrl: `https://comiblock.herokuapp.com/profile/${req.files[1].filename}`,
-      });
-    }
-  });
-});
+// app.use("/profile", express.static("upload/images/govtid"));
 
+app.post(
+  "/api/upload/selfie",
+  verify,
+  upload.single("profiles"),
+  (req, res) => {
+    var newVerification = Verification({
+      userEmail: req.user.email,
+      userFullname: req.user.fullname,
+      govtIdUrl: `https://comiblock.herokuapp.com/profile/${req.file.filename}`,
+    });
+    newVerification.save(function (err, Verification) {
+      if (err) {
+        res.json({
+          success: false,
+          msg: "Failed to Save Verification details",
+        });
+      } else {
+        res.json({
+          success: true,
+          msg: "successfully created Verification details",
+          govtIdUrl: `https://comiblock.herokuapp.com/profile/${req.file.filename}`,
+        });
+      }
+    });
+  }
+);
+
+app.post(
+  "/api/upload/govtid",
+  verify,
+  upload.single("profiles"),
+  (req, res) => {
+    const userEmailAddress = req.user.email;
+
+    const updatedVerification = await Verification.updateOne(
+      { userEmail: userEmailAddress },
+      {
+        $set: {
+          govtIdUrl: `https://comiblock.herokuapp.com/profile/${req.file.filename}`,
+        },
+      }
+    );
+    res.json({
+      success: true,
+      msg: "successfully created Verification details",
+      govtIdUrl: `https://comiblock.herokuapp.com/profile/${req.file.filename}`,
+    });
+
+    // newVerification.save(function (err, Verification) {
+    //   if (err) {
+    //     res.json({
+    //       success: false,
+    //       msg: "Failed to Save Verification details",
+    //     });
+    //   } else {
+    //     res.json({
+    //       success: true,
+    //       msg: "successfully created Verification details",
+    //       govtIdUrl: `https://comiblock.herokuapp.com/profile/${req.file.filename}`,
+    //     });
+    //   }
+    // });
+  }
+);
+
+// app.post(
+//   "/api/upload/selfie",
+//   verify,
+//   upload.array("profiles", 2),
+//   (req, res) => {
+//     var newVerification = Verification({
+//       userEmail: req.user.email,
+//       userFullname: req.user.fullname,
+//       govtIdUrl: `https://comiblock.herokuapp.com/profile/${req.files[0].filename}`,
+//       selfieUrl: `https://comiblock.herokuapp.com/profile/${req.files[1].filename}`,
+//     });
+//     newVerification.save(function (err, Verification) {
+//       if (err) {
+//         res.json({
+//           success: false,
+//           msg: "Failed to Save Verification details",
+//         });
+//       } else {
+//         res.json({
+//           success: true,
+//           msg: "successfully created Verification details",
+//           govtIdUrl: `https://comiblock.herokuapp.com/profile/${req.files[0].filename}`,
+//           selfieUrl: `https://comiblock.herokuapp.com/profile/${req.files[1].filename}`,
+//         });
+//       }
+//     });
+//   }
+// );
 function errHandler(err, req, res, next) {
   if (err instanceof multer.MulterError) {
     res.json({

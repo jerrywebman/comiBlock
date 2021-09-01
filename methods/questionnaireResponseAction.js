@@ -11,7 +11,7 @@ var functions = {
     } else {
       var newQuestionnaireRequest = Questionnaire({
         userEmail: req.user.email,
-        userFirstname: req.user.firstname,
+        userFullname: req.user.fullname,
         assessments: [
           {
             question: req.body.assessmentOneQ,

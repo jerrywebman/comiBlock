@@ -9,11 +9,7 @@ var verificationSchema = new mongoose.Schema({
     unique: true,
   },
 
-  userFirstname: {
-    type: String,
-    require: true,
-  },
-  userSurname: {
+  userFullname: {
     type: String,
     require: true,
   },

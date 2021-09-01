@@ -16,13 +16,7 @@ var userSchema = new mongoose.Schema({
     min: 6,
     max: 255,
   },
-  firstname: {
-    type: String,
-    require: true,
-    min: 2,
-    max: 255,
-  },
-  Surname: {
+  fullname: {
     type: String,
     require: true,
     min: 2,
@@ -32,6 +26,10 @@ var userSchema = new mongoose.Schema({
     type: Number,
     require: true,
     unique: true,
+  },
+  address: {
+    type: String,
+    require: true,
   },
   occupation: {
     type: String,
