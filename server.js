@@ -70,7 +70,7 @@ app.post(
   (req, res) => {
     const userEmailAddress = req.user.email;
 
-    const updatedVerification = await Verification.updateOne(
+    const updatedVerification = Verification.updateOne(
       { userEmail: userEmailAddress },
       {
         $set: {
