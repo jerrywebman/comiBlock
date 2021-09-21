@@ -5,6 +5,7 @@ var config = require("../config/dbconfig");
 const { token } = require("morgan");
 var bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
+// const emailjs = require("emailjs-com");
 
 var functions = {
   signup: async function (req, res) {
@@ -20,15 +21,16 @@ var functions = {
       return OTP;
     }
     const generatedOTP = generateOTP();
+    const defaultEmail = req.body.email;
+    const lowerCaseEmail = defaultEmail.toLowerCase();
 
-    let userEmail = await User.findOne({ email: req.body.email });
+    let userEmail = await User.findOne({ email: lowerCaseEmail });
     let userphone = await User.findOne({ phone: req.body.phone });
     let userPassword = req.body.password;
     if (
       !req.body.phone ||
       !req.body.fullname ||
-      !req.body.email ||
-      !req.body.address ||
+      !lowerCaseEmail ||
       !req.body.occupation ||
       !req.body.dateOfBirth ||
       !req.body.password
@@ -53,8 +55,8 @@ var functions = {
       //CREATING A NEW USER Money
       try {
         const newMoney = {
-          _id: req.body.email,
-          userEmail: req.body.email,
+          _id: lowerCaseEmail,
+          userEmail: lowerCaseEmail,
           userFullname: req.body.firstname,
           occupation: req.body.occupation,
           investmentBalance: 0,
@@ -69,10 +71,12 @@ var functions = {
         fullname: req.body.fullname,
         phone: req.body.phone,
         occupation: req.body.occupation,
-        address: req.body.address,
+        street: "",
+        city: "",
+        country: "",
         dateOfBirth: req.body.dateOfBirth,
         verifyCode: Number(generatedOTP),
-        email: req.body.email,
+        email: lowerCaseEmail,
         password: req.body.password,
       });
       newUser.save(function (err, newUser) {
@@ -97,9 +101,9 @@ var functions = {
           //step 2
           let mailOptions = {
             from: "jaytest@gmail.com",
-            to: req.body.email,
-            subject: "Testing the email function",
-            text: `Welcome Henry, The user is supposed to get this OTP on signup *** ${generatedOTP}***`,
+            to: lowerCaseEmail,
+            subject: "ComiBlock Welcome email (Test version)",
+            text: `Welcome Henry, The user fullname is ${req.body.fullname} he/she is supposed to get this OTP on signup *** ${generatedOTP}***`,
           };
 
           //step3
@@ -118,8 +122,11 @@ var functions = {
   },
   //RECOVER USER ACCOUNT
   recoverAccount: async function (req, res) {
-    let userEmail = await User.findOne({ email: req.body.email });
-    if (!req.body.email) {
+    const defaultEmail = req.body.email;
+    const lowerCaseEmail = defaultEmail.toLowerCase();
+
+    let userEmail = await User.findOne({ email: lowerCaseEmail });
+    if (!lowerCaseEmail) {
       res.json({ success: false, msg: "Please Enter an Email address" });
     } else if (!userEmail) {
       return res.status(400).send({
@@ -143,7 +150,7 @@ var functions = {
       //NOW I HAVE THE OTP, SEND IT TO THE DATABASE
       try {
         const updatedProfile = await User.updateOne(
-          { email: req.body.email },
+          { email: lowerCaseEmail },
           {
             $set: {
               verifyCode: Number(generatedOTP),
@@ -161,7 +168,7 @@ var functions = {
           //step 2
           let mailOptions = {
             from: "comiblock@gmail.com",
-            to: req.body.email,
+            to: lowerCaseEmail,
             subject: "OTP FROM COMIBLOCK",
             text: `you got this email because you are trying to recover your account. Please use this OTP -- ${generatedOTP} -- to create a new password`,
           };
@@ -187,9 +194,12 @@ var functions = {
 
   //CONFIRM EMAIL ADDRESS
   confirmEmail: async function (req, res) {
-    let userEmail = await User.findOne({ email: req.body.email });
-    const theEmail = req.body.email;
-    if (!req.body.email) {
+    const defaultEmail = req.body.email;
+    const lowerCaseEmail = defaultEmail.toLowerCase();
+
+    let userEmail = await User.findOne({ email: lowerCaseEmail });
+    const theEmail = lowerCaseEmail;
+    if (!lowerCaseEmail) {
       res.json({ success: false, msg: "Please Enter an Email address" });
     } else if (!userEmail) {
       return res.status(400).send({
@@ -199,7 +209,7 @@ var functions = {
     } else if (Number(userEmail.verifyCode) !== Number(req.body.verifyCode)) {
       return res.status(400).send({
         success: false,
-        msg: "Wrong OTP Password",
+        msg: "Wrong OTP",
       });
     } else {
       try {
@@ -221,8 +231,8 @@ var functions = {
   },
 
   //CREATE NEW/UPDATE PASSWORD
-  //update the user password when user is not signed in
-  updatePassword: async function (req, res) {
+  //update the user password when user is signed in
+  updatePasswordAuth: async function (req, res) {
     const userEmailAddress = req.user.email;
     let passConfirmString = req.body.confirmPassword;
     let passConfirmNewString = req.body.newPassword;
@@ -238,13 +248,84 @@ var functions = {
             success: false,
             msg: "Please sign in to change your password",
           });
-        } else if (user && req.body.confirmPassword === !req.body.newPassword) {
+        } else if (user && req.body.confirmPassword !== req.body.newPassword) {
           res.status(400).send({
             success: false,
             msg: "Password did not match",
           });
         } else if (
-          passConfirmString.length < 6 ||
+          passConfirmString.length < 6 &&
+          passConfirmNewString.length < 6
+        ) {
+          res.status(400).send({
+            success: false,
+            msg: "Password not secure. it must be 6 characters or more",
+          });
+        } else {
+          //CHANGE THE PASSWORD
+          try {
+            bcrypt.genSalt(10, function (err, salt) {
+              if (err) {
+                return next(err);
+              }
+              bcrypt.hash(
+                req.body.newPassword,
+                salt,
+                async function (err, hash) {
+                  if (err) {
+                    return next(err);
+                  }
+                  const updatedPassword = await User.updateOne(
+                    { email: userEmailAddress },
+                    {
+                      $set: {
+                        password: hash,
+                        verified: true,
+                      },
+                    }
+                  );
+                }
+              );
+            });
+            res.json({
+              success: true,
+              Message: "Password Successfully updated",
+            });
+          } catch (err) {
+            res.json({ message: err });
+          }
+        }
+      }
+    );
+  },
+
+  //update the user password when user is not signed in
+  updatePassword: async function (req, res) {
+    const defaultEmail = req.body.email;
+    const lowerCaseEmail = defaultEmail.toLowerCase();
+
+    const userEmailAddress = lowerCaseEmail;
+    let passConfirmString = req.body.confirmPassword;
+    let passConfirmNewString = req.body.newPassword;
+
+    User.findOne(
+      {
+        email: userEmailAddress,
+      },
+      function (err, user) {
+        if (err) throw err;
+        if (!user) {
+          res.status(403).send({
+            success: false,
+            msg: "No account associated with this email",
+          });
+        } else if (user && req.body.confirmPassword !== req.body.newPassword) {
+          res.status(400).send({
+            success: false,
+            msg: "Password did not match",
+          });
+        } else if (
+          passConfirmString.length < 6 &&
           passConfirmNewString.length < 6
         ) {
           res.status(400).send({
@@ -291,16 +372,25 @@ var functions = {
 
   //authenticate the user
   authenticate: function (req, res) {
+    const defaultEmail = req.body.email;
+    const lowerCaseEmail = defaultEmail.toLowerCase();
+
     User.findOne(
       {
-        email: req.body.email,
+        email: lowerCaseEmail,
       },
       function (err, user) {
+        // console.log(user);
         if (err) throw err;
         if (!user) {
           res.status(403).send({
             success: false,
             msg: "Authentication Failed, user email or password not correct",
+          });
+        } else if (user.verified === false) {
+          res.status(403).send({
+            success: false,
+            msg: "Authentication Failed, Please verify your email address",
           });
         } else {
           user.comparePassword(req.body.password, function (err, isMatch) {
@@ -332,10 +422,13 @@ var functions = {
         success: true,
         fullname: decodedtoken.fullname,
         occupation: decodedtoken.occupation,
-        address: decodedtoken.address,
+        street: decodedtoken.street,
+        city: decodedtoken.city,
+        country: decodedtoken.country,
         phone: decodedtoken.phone,
         email: decodedtoken.email,
         verified: decodedtoken.verified,
+        addressVerified: decodedtoken.addressVerified,
         dateOfBirth: decodedtoken.dateOfBirth,
         dateJoined: decodedtoken.dateJoined,
       });
@@ -344,6 +437,66 @@ var functions = {
         .status(400)
         .json({ success: false, msg: "No User/Invalid Token" });
     }
+  },
+
+  //CREATE NEW/UPDATE USER ADDRESS
+  updateAddress: async function (req, res) {
+    const userEmailAddress = req.user.email;
+    let street = req.body.userStreet;
+    let city = req.body.userCity;
+    let country = req.body.userCountry;
+    //CHECKING IF USER HAS AN ACCOUNT WITH US
+    User.findOne(
+      {
+        email: userEmailAddress,
+      },
+      function (err, user) {
+        if (err) throw err;
+        if (!user) {
+          res.status(403).send({
+            success: false,
+            msg: "Please sign in to Update your address",
+          });
+        } else if (
+          !user ||
+          !req.body.userStreet ||
+          !req.body.userCity ||
+          !req.body.userCountry
+        ) {
+          res.status(400).send({
+            success: false,
+            msg: "Please provide all required information",
+          });
+        }
+        // else if (street.length < 11) {
+        //   res.status(400).send({
+        //     success: false,
+        //     msg: "Your street address is incorrect. it must be 11 characters or more",
+        //   });
+        // }
+        else {
+          try {
+            const updatedAddress = User.updateOne(
+              { email: userEmailAddress },
+              {
+                $set: {
+                  street,
+                  city,
+                  country,
+                },
+              }
+            ).then(() => {
+              res.json({
+                success: true,
+                Message: "Address Successfully updated",
+              });
+            });
+          } catch (err) {
+            res.json({ message: err });
+          }
+        }
+      }
+    );
   },
 };
 

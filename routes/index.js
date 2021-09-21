@@ -37,8 +37,14 @@ router.post("/api/recover_account", actions.recoverAccount);
 //@desc confirm a new/old user email
 router.post("/api/confirm_email", actions.confirmEmail);
 
-//@desc confirm a new/old user email
-router.post("/api/change_password", verify, actions.updatePassword);
+//@desc change a logged in user password
+router.post("/api/change_password_auth", verify, actions.updatePasswordAuth);
+
+//@desc change a user password
+router.post("/api/change_password", actions.updatePassword);
+
+//@desc Update user address
+router.post("/api/add_address", verify, actions.updateAddress);
 
 //authenticate a user
 router.post("/api/login", actions.authenticate);
@@ -61,7 +67,7 @@ router.get(
   assessment.getAllAssessmenResult
 );
 
-//CREATE PORTFOLIO
+//CREATE PORTFOLIo
 //@desc POST
 router.post("/api/portfolio/create", portfolio.createPortfolio);
 //get a donation request

@@ -46,7 +46,7 @@
       </tr>
       <tr>
         <td style="font-weight: bolder; color: green; text-align: center">
-          SIGNUP, LOGIN, LOGOUT, CONFIRM EMAIL, RECOVER ACCOUNT
+          SIGNUP, LOGIN, LOGOUT, CONFIRM EMAIL, RECOVER ACCOUNT & UPDATE ADDRESS
         </td>
       </tr>
       <tr>
@@ -59,12 +59,63 @@
         <td>POST-/api/signup</td>
         <td>Signup -</td>
         <td>
-          req.body.phone, req.body.fullname, req.body.address, req.body.email,
+          req.body.phone, req.body.fullname, req.body.email,
           req.body.occupation, req.body.dateOfBirth, req.body.password
           <span style="font-weight: bolder">
-            <br /><br />By default a verified state is set to false, and the
-            user is sent an OTP to confirm email address.</span
+            <br /><br />By default verified, accountVerified and addressVerified
+            state are set to false, and the user is sent an OTP to confirm email
+            address.</span
           >
+        </td>
+      </tr>
+
+      <tr>
+        <td>POST-/api/confirm_email</td>
+        <td>confirm Email address</td>
+        <td>
+          req.body.email, req.body.verifyCode
+          <span style="font-weight: bolder">
+            <br /><br />Verifies the OTP sent to the user email address with
+            what is stored in the DB and updates the user verified status to
+            true if correct. after account creation. the user should be mandated
+            to confirm email address before the have access to the app</span
+          >
+        </td>
+      </tr>
+
+      <tr>
+        <td>POST-/api/login</td>
+        <td>Authentication/login</td>
+        <td>
+          req.body.email, req.body.password
+          <span style="font-weight: bolder">
+            <br /><br />The user must have verified their email address before
+            they can login to the app</span
+          >
+        </td>
+      </tr>
+      <tr>
+        <td>PATCH-/api/add_address</td>
+        <td>To add address</td>
+        <td>
+          req.body.userStreet, req.body.userCountry ,req.body.userCity. user
+          must be logged in to access this route
+        </td>
+      </tr>
+      <tr>
+        <td>PATCH-/api/change_password_auth</td>
+        <td>Update Password for logged in user</td>
+        <td>
+          req.body.newPassword ,req.body.confirmPassword. user must be logged in
+          to change_password with this route
+        </td>
+      </tr>
+      <tr>
+        <td>PATCH-/api/change_password</td>
+        <td>Update Password for users who lost access to their accounts.</td>
+        <td>
+          req.body.email, req.body.newPassword ,req.body.confirmPassword. no
+          login required to change_password with this route
         </td>
       </tr>
       <tr>
@@ -76,31 +127,6 @@
             <br /><br />Sends a new OTP to the user email address</span
           >
         </td>
-      </tr>
-      <tr>
-        <td>POST-/api/confirm_email</td>
-        <td>confirm Email address</td>
-        <td>
-          req.body.email, req.body.verifyCode
-          <span style="font-weight: bolder">
-            <br /><br />Verifies the OTP sent to the user email address with
-            what is stored in the DB and updates the user verified status to
-            true if correct</span
-          >
-        </td>
-      </tr>
-      <tr>
-        <td>PATCH-/api/update/password</td>
-        <td>Update Password</td>
-        <td>
-          req.body.newPassword ,req.body.confirmPassword. password must be 6 or
-          more characters long
-        </td>
-      </tr>
-      <tr>
-        <td>POST-/api/login</td>
-        <td>Authentication/login</td>
-        <td>req.body.email, req.body.password</td>
       </tr>
       <tr>
         <td>GET-/api/getinfo</td>

@@ -27,7 +27,15 @@ var userSchema = new mongoose.Schema({
     require: true,
     unique: true,
   },
-  address: {
+  street: {
+    type: String,
+    require: true,
+  },
+  city: {
+    type: String,
+    require: true,
+  },
+  country: {
     type: String,
     require: true,
   },
@@ -44,6 +52,14 @@ var userSchema = new mongoose.Schema({
     require: true,
   },
   verified: {
+    type: Boolean,
+    default: false,
+  },
+  accountVerified: {
+    type: Boolean,
+    default: false,
+  },
+  addressVerified: {
     type: Boolean,
     default: false,
   },
