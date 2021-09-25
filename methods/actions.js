@@ -89,9 +89,11 @@ var functions = {
         } else {
           //send an email here
           //step 1
-          //ALLOW LESS SECURE APPS TO MAKE THIS WORK
+          //ALLOW LESS SECURE APPS TO MAKE THIS WORK FOR GMAIL
           let transporter = nodemailer.createTransport({
-            service: "gmail",
+            host: "smtp.zoho.com",
+            secure: true,
+            port: 465,
             auth: {
               user: process.env.NODEMAILER_EMAIL,
               pass: process.env.NODEMAILER_PASSWORD,
@@ -100,7 +102,7 @@ var functions = {
 
           //step 2
           let mailOptions = {
-            from: "jaytest@gmail.com",
+            from: "support@comiblock.com",
             to: lowerCaseEmail,
             subject: "ComiBlock Welcome email (Test version)",
             text: `Welcome Henry, The user fullname is ${req.body.fullname} he/she is supposed to get this OTP on signup *** ${generatedOTP}***`,
@@ -109,7 +111,7 @@ var functions = {
           //step3
           transporter.sendMail(mailOptions, function (err, data) {
             if (err) {
-              console.log("error occurs");
+              console.log(err);
             } else {
               console.log("Email Sent");
             }
@@ -159,7 +161,9 @@ var functions = {
         ).then(() => {
           //step 1
           let transporter = nodemailer.createTransport({
-            service: "gmail",
+            host: "smtp.zoho.com",
+            secure: true,
+            port: 465,
             auth: {
               user: process.env.NODEMAILER_EMAIL,
               pass: process.env.NODEMAILER_PASSWORD,
@@ -167,7 +171,7 @@ var functions = {
           });
           //step 2
           let mailOptions = {
-            from: "comiblock@gmail.com",
+            from: "support@comiblock.com",
             to: lowerCaseEmail,
             subject: "OTP FROM COMIBLOCK",
             text: `you got this email because you are trying to recover your account. Please use this OTP -- ${generatedOTP} -- to create a new password`,
