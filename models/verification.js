@@ -13,11 +13,9 @@ var verificationSchema = new mongoose.Schema({
   },
   selfieUrl: {
     type: String,
-    require: true,
   },
   govtIdUrl: {
     type: String,
-    require: true,
   },
   createdAt: {
     type: Date,
