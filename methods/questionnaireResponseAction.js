@@ -1,8 +1,10 @@
 var Questionnaire = require("../models/Questionnaire");
+var User = require("../models/user");
 
 var functions = {
   //CREATE A NEW Questionnaire
   createQuestionaireResponse: function (req, res) {
+    const userEmailAddres = req.user.email;
     if (!req.user.email) {
       res.json({
         success: false,
@@ -54,10 +56,24 @@ var functions = {
             msg: "Failed to create Questionnaire Data",
           });
         } else {
-          res.json({
-            success: true,
-            msg: "successfully created Questionnaire Data",
-          });
+          try {
+            const updatedState = User.updateOne(
+              { email: userEmailAddress },
+              {
+                $set: {
+                  assessmentResponse: true,
+                },
+              }
+            ).then(() => {
+              res.json({
+                success: true,
+                msg: "successfully created Questionnaire Data",
+              });
+            });
+          } catch (err) {
+            res.json({ message: err });
+          }
+          //update the questionnaire state in the user profile
         }
       });
     }

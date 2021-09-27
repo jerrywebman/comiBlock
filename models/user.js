@@ -55,6 +55,10 @@ var userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  assessmentResponse: {
+    type: Boolean,
+    default: false,
+  },
   accountVerified: {
     type: Boolean,
     default: false,
