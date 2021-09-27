@@ -81,7 +81,7 @@ app.post(
     );
     res.json({
       success: true,
-      msg: "successfully created Verification details",
+      msg: "successfully added Govt ID",
       govtIdUrl: `https://comiblock.herokuapp.com/profile/${req.file.filename}`,
     });
 
