@@ -6,9 +6,7 @@ var verificationSchema = new mongoose.Schema({
     type: String,
     require: true,
     match: /.+\@.+\..+/,
-    unique: true,
   },
-
   userFullname: {
     type: String,
     require: true,

@@ -44,7 +44,6 @@ app.post(
     var newVerification = Verification({
       userEmail: req.user.email,
       userFullname: req.user.fullname,
-      govtIdUrl: "",
       selfieUrl: `https://comiblock.herokuapp.com/profile/${req.file.filename}`,
     });
     newVerification.save(function (err, Verification) {
@@ -56,8 +55,8 @@ app.post(
       } else {
         res.json({
           success: true,
-          msg: "successfully created Verification details",
-          govtIdUrl: `https://comiblock.herokuapp.com/profile/${req.file.filename}`,
+          msg: "successfully created Verification details(Seifie)",
+          selfieUrl: `https://comiblock.herokuapp.com/profile/${req.file.filename}`,
         });
       }
     });
@@ -69,36 +68,25 @@ app.post(
   verify,
   upload.single("profiles"),
   (req, res) => {
-    const userEmailAddress = req.user.email;
-
-    const updatedVerification = Verification.updateOne(
-      { userEmail: userEmailAddress },
-      {
-        $set: {
-          govtIdUrl: `https://comiblock.herokuapp.com/profile/${req.file.filename}`,
-        },
-      }
-    );
-    res.json({
-      success: true,
-      msg: "successfully added Govt ID",
+    var newVerification = Verification({
+      userEmail: req.user.email,
+      userFullname: req.user.fullname,
       govtIdUrl: `https://comiblock.herokuapp.com/profile/${req.file.filename}`,
     });
-
-    // newVerification.save(function (err, Verification) {
-    //   if (err) {
-    //     res.json({
-    //       success: false,
-    //       msg: "Failed to Save Verification details",
-    //     });
-    //   } else {
-    //     res.json({
-    //       success: true,
-    //       msg: "successfully created Verification details",
-    //       govtIdUrl: `https://comiblock.herokuapp.com/profile/${req.file.filename}`,
-    //     });
-    //   }
-    // });
+    newVerification.save(function (err, Verification) {
+      if (err) {
+        res.json({
+          success: false,
+          msg: "Failed to Save Verification details",
+        });
+      } else {
+        res.json({
+          success: true,
+          msg: "successfully created Verification details(Govt ID)",
+          govtIdUrl: `https://comiblock.herokuapp.com/profile/${req.file.filename}`,
+        });
+      }
+    });
   }
 );
 
