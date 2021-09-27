@@ -44,7 +44,8 @@ app.post(
     var newVerification = Verification({
       userEmail: req.user.email,
       userFullname: req.user.fullname,
-      govtIdUrl: `https://comiblock.herokuapp.com/profile/${req.file.filename}`,
+      govtIdUrl: "",
+      selfieUrl: `https://comiblock.herokuapp.com/profile/${req.file.filename}`,
     });
     newVerification.save(function (err, Verification) {
       if (err) {
