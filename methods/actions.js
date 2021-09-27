@@ -432,6 +432,7 @@ var functions = {
         phone: decodedtoken.phone,
         email: decodedtoken.email,
         verified: decodedtoken.verified,
+        assessmentResponse: decodedtoken.assessmentResponse,
         addressVerified: decodedtoken.addressVerified,
         dateOfBirth: decodedtoken.dateOfBirth,
         dateJoined: decodedtoken.dateJoined,
