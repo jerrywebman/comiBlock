@@ -49,37 +49,39 @@ var functions = {
           },
         ],
       });
-      newQuestionnaireRequest.save(function (err, Questionnaire) {
+      newQuestionnaireRequest.save(async function (err, Questionnaire) {
         if (err) {
-          res.json({
+          res.status(400).send({
             success: false,
             msg: "Failed to create Questionnaire Data",
           });
         } else {
           try {
-            const updatedState = User.updateOne(
-              { email: userEmailAddress },
+            const emailAddress = req.user.email;
+            const updatedState = await User.updateOne(
+              { email: emailAddress },
               {
                 $set: {
                   assessmentResponse: true,
                 },
               }
             ).then(() => {
-              res.json({
-                success: true,
-                msg: "successfully created Questionnaire Data",
-              });
+              console.log("success");
+              return;
             });
           } catch (err) {
-            res.json({ message: err });
+            console.log(err);
           }
-          //update the questionnaire state in the user profile
         }
+      });
+      res.json({
+        success: true,
+        msg: "successfully created Questionnaire Data",
       });
     }
   },
 
-  // GET ALL DonationRequest
+  // GET ALL DonationReques
   getAllAssessmenResult: async function (req, res) {
     try {
       const allQuestionnaireRequest = await Questionnaire.find();

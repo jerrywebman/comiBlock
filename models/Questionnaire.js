@@ -6,7 +6,6 @@ var questionnaireSchema = new mongoose.Schema({
     type: String,
     require: true,
     match: /.+\@.+\..+/,
-    unique: true,
     min: 6,
     max: 255,
   },
